@@ -6,7 +6,9 @@ final class FredKitTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        XCTAssertEqual(FredKit().text, "Hello, World!")
+        XCTAssertEqual(TimeInterval.day, 60*60*24)
+        XCTAssertEqual(TimeInterval.week, 60*60*24*7)
+        XCTAssertEqual(TimeInterval.year, 60*60*24*365)
     }
 
     static var allTests = [
