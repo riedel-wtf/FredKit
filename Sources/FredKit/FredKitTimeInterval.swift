@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension TimeInterval {
+public extension TimeInterval {
     static let nanosecond = TimeInterval.millisecond / 1000.0
     static let millisecond = TimeInterval.second / 1000.0
     static let second = 1.0
@@ -23,7 +23,7 @@ extension TimeInterval {
     static let millenium = TimeInterval.year * 1000.0
 }
 
-extension Date {
+public extension Date {
     
     var shortTimeString: String {
         let dateFormatter = DateFormatter()
