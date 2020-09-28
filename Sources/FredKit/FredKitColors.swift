@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 public extension UIColor {
-    var brightness: CGFloat {
+    public var brightness: CGFloat {
         var red : CGFloat = 0
         var green : CGFloat = 0
         var blue : CGFloat = 0
@@ -24,11 +24,11 @@ public extension UIColor {
         return 0
     }
     
-    var isLightColor: Bool {
+    public var isLightColor: Bool {
         return brightness > 0.7
     }
     
-    var goodContrastColor: UIColor {
+    public var goodContrastColor: UIColor {
         if isLightColor {
             return .black
         }
