@@ -23,7 +23,7 @@ public extension Date {
             // show weekday
             let formatterWeekday = DateFormatter()
             formatterWeekday.dateFormat = "EEEE"
-            let weekday = formatterWeekday.string(from: self).captalizeFirstCharacter()
+            let weekday = formatterWeekday.string(from: self).firstCharacterCapitalized
             return weekday
         }
         
