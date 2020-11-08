@@ -302,7 +302,6 @@ public extension FredKitSubscriptionManager {
         let alert = UIAlertController.init(title: "Purchase Failed", message: "Couldn't purchase the “Pro Membership”. Maybe your device has set restrictions on such purchases or you disabled In-App puchases.", preferredStyle: .alert)
         let learnMore = UIAlertAction.init(title: "Learn More", style: .default, handler: { (_) in
             let sfSVC = SFSafariViewController.init(url: URL.init(string: "https://support.apple.com/en-us/HT204396")!)
-            sfSVC.preferredBarTintColor = UIColor.black
             UIViewController.topViewController()?.present(sfSVC, animated: true, completion: nil)
         })
         let ok = UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil)
@@ -315,7 +314,6 @@ public extension FredKitSubscriptionManager {
         let alert = UIAlertController.init(title: "Restoring Failed", message: "Couldn't restore the In App Purchases.", preferredStyle: .alert)
         let learnMore = UIAlertAction.init(title: "Learn More", style: .default, handler: { (_) in
             let sfSVC = SFSafariViewController.init(url: URL.init(string: "https://support.apple.com/en-us/HT204530")!)
-            sfSVC.preferredBarTintColor = UIColor.black
             UIViewController.topViewController()?.present(sfSVC, animated: true, completion: nil)
         })
         let ok = UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil)
