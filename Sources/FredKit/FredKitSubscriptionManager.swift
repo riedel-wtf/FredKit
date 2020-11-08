@@ -24,11 +24,11 @@ public enum MembershipStatus {
     private var sharedSecret: String!
     private var productIds: [String]!
     
-    var delegate: SubscriptionManagerDelegate!
+    var delegate: FredKitSubscriptionManagerDelegate!
     
     var cachedProducts = [SKProduct]()
     
-    @objc static func setup(productIds: [String], sharedSecret: String, delegate: SubscriptionManagerDelegate) {
+    @objc static func setup(productIds: [String], sharedSecret: String, delegate: FredKitSubscriptionManagerDelegate) {
         shared.productIds = productIds
         shared.sharedSecret = sharedSecret
         shared.delegate = delegate
@@ -231,7 +231,7 @@ public enum MembershipStatus {
     }
 }
 
-
+@available(iOS 11.2, *)
 extension SKProductSubscriptionPeriod {
     
     var localizedDuration: String {
@@ -269,6 +269,7 @@ public extension SKProduct {
     }
 }
 
+@available(iOS 11.2, *)
 public extension SKProductDiscount {
     var localizedPrice: String? {
         let numberFormatter = NumberFormatter()
@@ -296,7 +297,7 @@ public extension Array where Element == ReceiptItem {
 
 
 import SafariServices
-public extension SubscriptionManager {
+public extension FredKitSubscriptionManager {
     public func showPaymentDisabledError() {
         let alert = UIAlertController.init(title: "Purchase Failed", message: "Couldn't purchase the “Pro Membership”. Maybe your device has set restrictions on such purchases or you disabled In-App puchases.", preferredStyle: .alert)
         let learnMore = UIAlertAction.init(title: "Learn More", style: .default, handler: { (_) in
