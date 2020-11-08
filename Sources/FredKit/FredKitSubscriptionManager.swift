@@ -19,16 +19,16 @@ public enum MembershipStatus {
 
 @objc public class FredKitSubscriptionManager: NSObject {
     
-    @objc static let shared = FredKitSubscriptionManager()
+    @objc public static let shared = FredKitSubscriptionManager()
     
     private var sharedSecret: String!
     private var productIds: [String]!
     
     var delegate: FredKitSubscriptionManagerDelegate!
     
-    var cachedProducts = [SKProduct]()
+    public var cachedProducts = [SKProduct]()
     
-    @objc static func setup(productIds: [String], sharedSecret: String, delegate: FredKitSubscriptionManagerDelegate) {
+    @objc public static func setup(productIds: [String], sharedSecret: String, delegate: FredKitSubscriptionManagerDelegate) {
         shared.productIds = productIds
         shared.sharedSecret = sharedSecret
         shared.delegate = delegate
@@ -174,7 +174,7 @@ public enum MembershipStatus {
         return nil
     }
     
-    var currentMembershipStatus: MembershipStatus {
+    public var currentMembershipStatus: MembershipStatus {
         
         if CommandLine.arguments.contains("-subscribed") {
             return .subscribed
@@ -203,7 +203,7 @@ public enum MembershipStatus {
         #endif
     }
     
-    @objc var isCurrentlySubscribed: Bool {
+    @objc public var isCurrentlySubscribed: Bool {
         return self.currentMembershipStatus == .subscribed
     }
     
