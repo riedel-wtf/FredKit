@@ -232,9 +232,9 @@ public enum MembershipStatus {
 }
 
 @available(iOS 11.2, *)
-extension SKProductSubscriptionPeriod {
+public extension SKProductSubscriptionPeriod {
     
-    var localizedDuration: String {
+    public var localizedDuration: String {
         let isPlural = !(numberOfUnits == 1)
         var periodType = isPlural ? NSLocalizedString("Weeks", comment: "") : NSLocalizedString("Week", comment: "");
         
@@ -260,7 +260,7 @@ extension SKProductSubscriptionPeriod {
 }
 
 public extension SKProduct {
-    var localizedPrice: String? {
+    public var localizedPrice: String? {
         let numberFormatter = NumberFormatter()
         let locale = priceLocale
         numberFormatter.numberStyle = .currency
@@ -271,7 +271,7 @@ public extension SKProduct {
 
 @available(iOS 11.2, *)
 public extension SKProductDiscount {
-    var localizedPrice: String? {
+    public var localizedPrice: String? {
         let numberFormatter = NumberFormatter()
         let locale = priceLocale
         numberFormatter.numberStyle = .currency
@@ -282,7 +282,7 @@ public extension SKProductDiscount {
 
 
 public extension Array where Element == ReceiptItem {
-    var latestExpirationDate: Date {
+    public var latestExpirationDate: Date {
         var latestExpirationDate = Date(timeIntervalSince1970: 0)
         for item in self {
             if let expirationDate = item.subscriptionExpirationDate {
