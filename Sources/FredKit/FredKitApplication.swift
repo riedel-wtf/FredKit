@@ -20,4 +20,11 @@ public extension UIApplication {
         let build = dictionary["CFBundleVersion"] as! String
         return build
     }
+    
+    var appName: String {
+        let dictionary = Bundle.main.infoDictionary!
+        let appName = dictionary["CFBundleName"] as! String
+        return appName
+    }
+    
 }

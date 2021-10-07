@@ -234,7 +234,7 @@ public enum MembershipStatus {
 @available(iOS 11.2, *)
 public extension SKProductSubscriptionPeriod {
     
-    public var localizedDuration: String {
+    var localizedDuration: String {
         let isPlural = !(numberOfUnits == 1)
         var periodType = isPlural ? NSLocalizedString("Weeks", comment: "") : NSLocalizedString("Week", comment: "");
         
@@ -260,7 +260,7 @@ public extension SKProductSubscriptionPeriod {
 }
 
 public extension SKProduct {
-    public var localizedPrice: String? {
+    var localizedPrice: String? {
         let numberFormatter = NumberFormatter()
         let locale = priceLocale
         numberFormatter.numberStyle = .currency
@@ -282,7 +282,7 @@ public extension SKProductDiscount {
 
 
 public extension Array where Element == ReceiptItem {
-    public var latestExpirationDate: Date {
+    var latestExpirationDate: Date {
         var latestExpirationDate = Date(timeIntervalSince1970: 0)
         for item in self {
             if let expirationDate = item.subscriptionExpirationDate {
@@ -298,7 +298,7 @@ public extension Array where Element == ReceiptItem {
 
 import SafariServices
 public extension FredKitSubscriptionManager {
-    public func showPaymentDisabledError() {
+    func showPaymentDisabledError() {
         let alert = UIAlertController.init(title: "Purchase Failed", message: "Couldn't purchase the “Pro Membership”. Maybe your device has set restrictions on such purchases or you disabled In-App puchases.", preferredStyle: .alert)
         let learnMore = UIAlertAction.init(title: "Learn More", style: .default, handler: { (_) in
             let sfSVC = SFSafariViewController.init(url: URL.init(string: "https://support.apple.com/en-us/HT204396")!)
@@ -310,7 +310,7 @@ public extension FredKitSubscriptionManager {
         UIViewController.topViewController()?.present(alert, animated: true)
     }
     
-    public func showRestoringPurchasesError() {
+    func showRestoringPurchasesError() {
         let alert = UIAlertController.init(title: "Restoring Failed", message: "Couldn't restore the In App Purchases.", preferredStyle: .alert)
         let learnMore = UIAlertAction.init(title: "Learn More", style: .default, handler: { (_) in
             let sfSVC = SFSafariViewController.init(url: URL.init(string: "https://support.apple.com/en-us/HT204530")!)
@@ -322,7 +322,7 @@ public extension FredKitSubscriptionManager {
         UIViewController.topViewController()?.present(alert, animated: true)
     }
     
-    public func showPurchaseFailedError() {
+    func showPurchaseFailedError() {
         let alert = UIAlertController.init(title: "Purchase Failed", message: "Couldn't purchase the “Pro Membership”. Please make sure that your phone is connected to the Internet and try again.", preferredStyle: .alert)
         let ok = UIAlertAction.init(title: "OK", style: .default, handler: nil)
         alert.addAction(ok)
