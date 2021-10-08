@@ -260,7 +260,7 @@ public extension SKProductSubscriptionPeriod {
 }
 
 public extension SKProduct {
-    var localizedPrice: String? {
+    var localizedPriceString: String? {
         let numberFormatter = NumberFormatter()
         let locale = priceLocale
         numberFormatter.numberStyle = .currency
@@ -271,7 +271,7 @@ public extension SKProduct {
 
 @available(iOS 11.2, *)
 public extension SKProductDiscount {
-    public var localizedPrice: String? {
+    var localizedPriceString: String? {
         let numberFormatter = NumberFormatter()
         let locale = priceLocale
         numberFormatter.numberStyle = .currency
