@@ -28,9 +28,11 @@ public enum MembershipStatus {
     
     public var cachedProducts = [SKProduct]()
     
-    @objc public static func setup(productIds: [String], sharedSecret: String, delegate: FredKitSubscriptionManagerDelegate) {
+    @objc public static func setup(productIds: [String], sharedSecret: String? = nil, delegate: FredKitSubscriptionManagerDelegate) {
         shared.productIds = productIds
-        shared.sharedSecret = sharedSecret
+        if let sharedSecret = sharedSecret {
+            shared.sharedSecret = sharedSecret
+        }
         shared.delegate = delegate
         shared.prefetchProducts()
         shared.completePendingTransactions()
@@ -42,6 +44,12 @@ public enum MembershipStatus {
             self.cachedProducts = Array(result.retrievedProducts)
             print(self.cachedProducts)
             self.delegate.didFinishFetchingProducts(products: self.cachedProducts)
+        }
+    }
+    
+    public func product(forId id: String) -> SKProduct? {
+        return self.cachedProducts.first { product in
+            product.productIdentifier == id
         }
     }
     

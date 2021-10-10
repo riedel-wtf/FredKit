@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SafariServices
+import StoreKit
 
 struct WebLinkCell {
     let title: String
@@ -15,23 +16,30 @@ struct WebLinkCell {
     let icon: UIImage?
 }
 
-public struct DisclosureSubtitleCell {
-    public init(title: String, subtitle: String) {
+public struct InAppPurchaseCell {
+    public init(title: String, subtitle: String, productID: String) {
         self.title = title
         self.subtitle = subtitle
+        self.productID = productID
     }
     
     let title: String
     let subtitle: String
+    let productID: String
 }
 
-public protocol FredKitAboutViewControllerDelegate {
-    func didSelect(additionalCell cell: DisclosureSubtitleCell, atIndexPath indexPath: IndexPath)
+
+private struct TableSections {
+    static let Header = 0,
+         AppInfos = 1,
+         MarketingLinks = 2,
+         Tips = 3,
+         Legal = 4,
+         count = 5
 }
 
 public class FredKitAboutViewController: UITableViewController {
-        
-    public var delegate: FredKitAboutViewControllerDelegate?
+
     
     let firstSectionLinks = [
         WebLinkCell(title: "Website", url: "https://riedel.wtf", icon: UIImage(named: "link", in: Bundle.module, compatibleWith: nil)),
@@ -45,9 +53,13 @@ public class FredKitAboutViewController: UITableViewController {
         WebLinkCell(title: "Imprint", url: "https://riedel.wtf/imprint", icon: UIImage(named: "paragraph", in: Bundle.module, compatibleWith: nil))
     ]
     
-    public var additionalCells = [DisclosureSubtitleCell]() {
+    public var inAppPurchaseCells = [InAppPurchaseCell]() {
         didSet {
-            tableView.reloadData()
+            let productIds = inAppPurchaseCells.map { inAppCell in
+                inAppCell.productID
+            }
+            
+            FredKitSubscriptionManager.setup(productIds: productIds, delegate: self)
         }
     }
     
@@ -65,7 +77,7 @@ public class FredKitAboutViewController: UITableViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.title = "About"
         
         let nib = UINib(nibName: "FredKitSimpleDetailDisclosureTableViewCell", bundle: Bundle.module)
@@ -76,8 +88,16 @@ public class FredKitAboutViewController: UITableViewController {
         tableView.register(nibRiedelWtf, forCellReuseIdentifier: "FredKitAboutMeTableViewCell")
         
         
-        let subtitleCellNib = UINib(nibName: "FredKitDisclosureSubtitleTableViewCell", bundle: Bundle.module)
-        tableView.register(subtitleCellNib, forCellReuseIdentifier: "FredKitDisclosureSubtitleTableViewCell")
+        let subtitleCellNib = UINib(nibName: "FredKitInAppPurchaseTableViewCell", bundle: Bundle.module)
+        tableView.register(subtitleCellNib, forCellReuseIdentifier: "FredKitInAppPurchaseTableViewCell")
+        
+        let riedelWtfHeaderNib = UINib(nibName: "FredKitAboutHeaderTableViewCell", bundle: Bundle.module)
+        tableView.register(riedelWtfHeaderNib, forCellReuseIdentifier: "FredKitAboutHeaderTableViewCell")
+        
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        let appInfosNib = UINib(nibName: "FredKitAppInfoTableViewCell", bundle: Bundle.module)
+        tableView.register(appInfosNib, forCellReuseIdentifier: "FredKitAppInfoTableViewCell")
         
         if #available(iOS 13.0, *) {
             
@@ -93,28 +113,32 @@ public class FredKitAboutViewController: UITableViewController {
     @objc func done() {
         self.dismiss(animated: true)
     }
-
+    
     // MARK: - Table view data source
-
+    
     public override func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return TableSections.count
     }
-
+    
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 1
+        if section == TableSections.Header {
+            return 2
         }
         
-        if section == 1 {
+        if section == TableSections.MarketingLinks {
             return firstSectionLinks.count
         }
         
-        if section == 2 {
-            return additionalCells.count
+        if section == TableSections.Tips {
+            return inAppPurchaseCells.count
         }
         
-        if section == 3 {
+        if section == TableSections.Legal {
             return secondSectionLinks.count
+        }
+        
+        if section == TableSections.AppInfos {
+            return 2
         }
         
         return 0
@@ -122,15 +146,40 @@ public class FredKitAboutViewController: UITableViewController {
     
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "FredKitAboutMeTableViewCell") as! FredKitAboutMeTableViewCell
+        if indexPath.section == TableSections.Header {
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "FredKitAboutHeaderTableViewCell") as! FredKitAboutHeaderTableViewCell
+                
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+                cell.textLabel?.text = "More riedel.wtf apps"
+                cell.accessoryType = .disclosureIndicator
+                return cell
+            }
             
-            return cell
         }
         
-        if indexPath.section == 2 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "FredKitDisclosureSubtitleTableViewCell") as! FredKitDisclosureSubtitleTableViewCell
-            let detailCell = additionalCells[indexPath.row]
+        if indexPath.section == TableSections.AppInfos {
+            
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "FredKitAppInfoTableViewCell") as! FredKitAppInfoTableViewCell
+                
+                return cell
+            } else {
+                
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+                cell.textLabel?.text = "Share \(UIApplication.shared.appName)"
+                cell.accessoryType = .disclosureIndicator
+                return cell
+            }
+            
+        }
+        
+        if indexPath.section == TableSections.Tips {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "FredKitInAppPurchaseTableViewCell") as! FredKitInAppPurchaseTableViewCell
+            cell.subtitleLabel.isHidden = false
+            let detailCell = inAppPurchaseCells[indexPath.row]
             cell.updateContents(cellDetails: detailCell)
             return cell
         }
@@ -138,7 +187,7 @@ public class FredKitAboutViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FredKitSimpleDetailDisclosureTableViewCell") as! FredKitSimpleDetailDisclosureTableViewCell
         
-        if indexPath.section == 1 {
+        if indexPath.section == TableSections.MarketingLinks {
             let webLinkCell = firstSectionLinks[indexPath.row]
             cell.iconView.image = webLinkCell.icon
             cell.title.text = webLinkCell.title
@@ -146,7 +195,7 @@ public class FredKitAboutViewController: UITableViewController {
         
         
         
-        if indexPath.section == 3 {
+        if indexPath.section == TableSections.Legal {
             let webLinkCell = secondSectionLinks[indexPath.row]
             cell.iconView.image = webLinkCell.icon
             cell.title.text = webLinkCell.title
@@ -157,15 +206,22 @@ public class FredKitAboutViewController: UITableViewController {
     
     public override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        if indexPath.section == 2 {
+        if indexPath.section == TableSections.Tips {
             return UITableView.automaticDimension
         }
         
-        if indexPath.section == 0 {
-            return 133
+        if indexPath.section == TableSections.AppInfos {
+            return UITableView.automaticDimension
         }
         
-        return 55
+        if indexPath.section == TableSections.Header {
+            if indexPath.row == 0 {
+                return 200
+            }
+            return 55
+        }
+        
+        return UITableView.automaticDimension
     }
     
     public override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -196,31 +252,69 @@ public class FredKitAboutViewController: UITableViewController {
     
     
     public override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        if section == 3 {
-            return "\(UIApplication.shared.appName) Version \(UIApplication.shared.humanReadableVersionString)"
-        }
         return nil
     }
     
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if indexPath.section == 1 {
+        if indexPath.section == TableSections.Header && indexPath.row == 1 {
+            if #available(iOS 13.0, *) {
+                let moreAppsVC = MoreAppsTableViewController(style: .insetGrouped)
+                self.navigationController?.pushViewController(moreAppsVC, animated: true)
+            }
+        }
+        
+        if indexPath.section == TableSections.MarketingLinks {
             let webLinkCell = firstSectionLinks[indexPath.row]
             let safariVC = SFSafariViewController(url: URL(string: webLinkCell.url)!)
             self.present(safariVC, animated: true)
         }
         
-        if indexPath.section == 2 {
-            let cell = additionalCells[indexPath.row]
-            self.delegate?.didSelect(additionalCell: cell, atIndexPath: indexPath)
+        if indexPath.section == TableSections.Tips {
+            let inAppPurchaseCell = inAppPurchaseCells[indexPath.row]
+            if let product = FredKitSubscriptionManager.shared.product(forId: inAppPurchaseCell.productID) {
+                FredKitSubscriptionManager.shared.purchaseSubscription(forProduct: product) { success in
+                    if success {
+                        tableView.reloadData()
+                        let thankYouAlert = UIAlertController(title: "Thank you ❤️", message: "Your support is very much appreciated!", preferredStyle: .alert)
+                        
+                        let continueButton = UIAlertAction(title: "Continue", style: .default)
+                        
+                        thankYouAlert.addAction(continueButton)
+                        
+                        self.present(thankYouAlert, animated: true)
+                        
+                    } else {
+                        tableView.reloadData()
+                    }
+                }
+            }
             tableView.deselectRow(at: indexPath, animated: true)
         }
         
-        if indexPath.section == 3 {
+        if indexPath.section == TableSections.Legal {
             let webLinkCell = secondSectionLinks[indexPath.row]
             let safariVC = SFSafariViewController(url: URL(string: webLinkCell.url)!)
             self.present(safariVC, animated: true)
         }
+        
+        if indexPath.section == TableSections.AppInfos && indexPath.row == 1 {
+            tableView.deselectRow(at: indexPath, animated: true)
+            if #available(iOS 13.0, *) {
+                if let appStoreUrl = UIApplication.shared.appStoreUrl {
+                    let sharedObjects:[AnyObject] = [appStoreUrl as AnyObject]
+                    let activityViewController = UIActivityViewController(activityItems : sharedObjects, applicationActivities: nil)
+                    activityViewController.popoverPresentationController?.sourceView = self.view
+                    
+                    self.present(activityViewController, animated: true, completion: nil)
+                }
+            }
+        }
     }
-    
+}
+
+extension FredKitAboutViewController: FredKitSubscriptionManagerDelegate {
+    public func didFinishFetchingProducts(products: [SKProduct]) {
+        self.tableView.reloadData()
+    }
 }
