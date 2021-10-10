@@ -10,7 +10,13 @@ import UIKit
 import SafariServices
 import StoreKit
 
-struct WebLinkCell {
+public struct WebLinkCell {
+    public init(title: String, url: String, icon: UIImage?) {
+        self.title = title
+        self.url = url
+        self.icon = icon
+    }
+    
     let title: String
     let url: String
     let icon: UIImage?
@@ -33,9 +39,10 @@ private struct TableSections {
     static let Header = 0,
          AppInfos = 1,
          MarketingLinks = 2,
-         Tips = 3,
-         Legal = 4,
-         count = 5
+        AdditionalAppLinks = 3,
+         Tips = 4,
+         Legal = 5,
+         count = 6
 }
 
 public class FredKitAboutViewController: UITableViewController {
@@ -52,6 +59,12 @@ public class FredKitAboutViewController: UITableViewController {
         WebLinkCell(title: "Terms & Conditions, Privacy Policy", url: "https://riedel.wtf/privacy", icon: UIImage(named: "paragraph", in: Bundle.module, compatibleWith: nil)),
         WebLinkCell(title: "Imprint", url: "https://riedel.wtf/imprint", icon: UIImage(named: "paragraph", in: Bundle.module, compatibleWith: nil))
     ]
+    
+    public var additionalAppLinks = [WebLinkCell]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     public var inAppPurchaseCells = [InAppPurchaseCell]() {
         didSet {
@@ -141,6 +154,10 @@ public class FredKitAboutViewController: UITableViewController {
             return 2
         }
         
+        if section == TableSections.AdditionalAppLinks {
+            return additionalAppLinks.count
+        }
+        
         return 0
     }
     
@@ -159,6 +176,8 @@ public class FredKitAboutViewController: UITableViewController {
             }
             
         }
+        
+        
         
         if indexPath.section == TableSections.AppInfos {
             
@@ -186,6 +205,12 @@ public class FredKitAboutViewController: UITableViewController {
         
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FredKitSimpleDetailDisclosureTableViewCell") as! FredKitSimpleDetailDisclosureTableViewCell
+        
+        if indexPath.section == TableSections.AdditionalAppLinks {
+            let webLinkCell = additionalAppLinks[indexPath.row]
+            cell.iconView.image = webLinkCell.icon
+            cell.title.text = webLinkCell.title
+        }
         
         if indexPath.section == TableSections.MarketingLinks {
             let webLinkCell = firstSectionLinks[indexPath.row]
@@ -266,6 +291,12 @@ public class FredKitAboutViewController: UITableViewController {
         
         if indexPath.section == TableSections.MarketingLinks {
             let webLinkCell = firstSectionLinks[indexPath.row]
+            let safariVC = SFSafariViewController(url: URL(string: webLinkCell.url)!)
+            self.present(safariVC, animated: true)
+        }
+        
+        if indexPath.section == TableSections.AdditionalAppLinks {
+            let webLinkCell = additionalAppLinks[indexPath.row]
             let safariVC = SFSafariViewController(url: URL(string: webLinkCell.url)!)
             self.present(safariVC, animated: true)
         }
