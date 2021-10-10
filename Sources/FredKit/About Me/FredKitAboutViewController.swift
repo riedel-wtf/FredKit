@@ -112,8 +112,17 @@ public class FredKitAboutViewController: UITableViewController {
         let appInfosNib = UINib(nibName: "FredKitAppInfoTableViewCell", bundle: Bundle.module)
         tableView.register(appInfosNib, forCellReuseIdentifier: "FredKitAppInfoTableViewCell")
         
+        
+    }
+    
+    @objc func done() {
+        self.dismiss(animated: true)
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         if #available(iOS 13.0, *) {
-            
             if let navigationController = self.navigationController {
                 if navigationController.isBeingPresented {
                     let done = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
@@ -123,9 +132,6 @@ public class FredKitAboutViewController: UITableViewController {
         }
     }
     
-    @objc func done() {
-        self.dismiss(animated: true)
-    }
     
     // MARK: - Table view data source
     
