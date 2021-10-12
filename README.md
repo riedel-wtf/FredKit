@@ -6,7 +6,7 @@ A collection of customised Swift extensions and classes I've written over the ye
 - Specify corner radius
 - Uses advanced continous corners instead of perfectly round corners
 
-## TimeIntervals and Date Formatting
+## Date Formatting
 - humanReadableDateString
 - humanReadableDateAndTimeString
 - shortTimeString
@@ -17,6 +17,20 @@ A collection of customised Swift extensions and classes I've written over the ye
 - longDate
 - compactDateTimeString
 - isInFuture
+
+## TimeIntervals
+- nanosecond
+- millisecond
+- second
+- minute
+- hour
+- day
+- week
+- month
+- year
+- decade
+- century
+- millenium
 
 ## Working with Colors
 - Contrast calculation (dark or light background required for a font with specific color?)
