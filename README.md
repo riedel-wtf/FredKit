@@ -7,7 +7,16 @@ A collection of customised Swift extensions and classes I've written over the ye
 - Uses advanced continous corners instead of perfectly round corners
 
 ## TimeIntervals and Date Formatting
-
+- humanReadableDateString
+- humanReadableDateAndTimeString
+- shortTimeString
+- shortDateString
+- shortWeekDay
+- shortMonth
+- shortDate
+- longDate
+- compactDateTimeString
+- isInFuture
 
 ## Working with Colors
 - Contrast calculation (dark or light background required for a font with specific color?)
@@ -27,10 +36,24 @@ Use `NSLocalizedString("hello world!")` without the additional `comment` attribu
 - Levenshtein distance
 - Get CGPath of String
 
-
 ## FileManager extensions
 - Ensure folder exists
-
+- documentsDirectory URL
 
 ## UIView
 - snapshot `UIView`
+
+
+## NSLocalizedString
+- NSLocalizedString without comment
+
+
+## FredKitSubscriptionManager
+Makes working with Subscriptions on iOS even easier. Uses SwiftyStoreKit and Apple‘s StoreKit under the hood.
+
+## UITableView
+registerMainBundleNibs: Register multiple cell Nibs at once.
+
+## UIViewController
+- wrappedInNavigationController
+- topViewController
