@@ -39,7 +39,7 @@ A collection of customised Swift extensions and classes I've written over the ye
 ## Rounded Font
 - Creates the rounded SF font version
 
-## Simplified Localized String
+## Simplified NSLocalizedString
 Use `NSLocalizedString("hello world!")` without the additional `comment` attribute.
 
 ## Strings
@@ -56,11 +56,6 @@ Use `NSLocalizedString("hello world!")` without the additional `comment` attribu
 
 ## UIView
 - snapshot `UIView`
-
-
-## NSLocalizedString
-- NSLocalizedString without comment
-
 
 ## FredKitSubscriptionManager
 Makes working with Subscriptions on iOS even easier. Uses SwiftyStoreKit and Apple‘s StoreKit under the hood.
