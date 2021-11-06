@@ -7,7 +7,6 @@
 import Foundation
 import SwiftyStoreKit
 import StoreKit
-import FredKit
 
 @objc public protocol FredKitSubscriptionManagerDelegate {
     @objc func didFinishFetchingProducts(products: [SKProduct])
