@@ -27,6 +27,18 @@ public enum MembershipStatus {
     
     public var cachedProducts = [SKProduct]()
     
+    
+    public typealias CachedProductsCompletionHandler = ([SKProduct]) -> (Void)
+    
+    private var cachedProductsCompletionHandlers: [CachedProductsCompletionHandler] = []
+    public func waitForCachedProducts(completion: @escaping CachedProductsCompletionHandler) {
+        if self.cachedProducts.isEmpty {
+            cachedProductsCompletionHandlers.append(completion)
+        } else {
+            completion(cachedProducts)
+        }
+    }
+    
     @objc public static func setup(productIds: [String], sharedSecret: String? = nil, delegate: FredKitSubscriptionManagerDelegate) {
         shared.productIds = productIds
         if let sharedSecret = sharedSecret {
@@ -37,12 +49,17 @@ public enum MembershipStatus {
         shared.completePendingTransactions()
     }
     
+    
+    
     private func prefetchProducts() {
         let productIdSet = Set<String>(self.productIds)
         SwiftyStoreKit.retrieveProductsInfo(productIdSet) { result in
             self.cachedProducts = Array(result.retrievedProducts)
             print(self.cachedProducts)
             self.delegate.didFinishFetchingProducts(products: self.cachedProducts)
+            self.cachedProductsCompletionHandlers.forEach { completion in
+                completion(self.cachedProducts)
+            }
         }
     }
     
@@ -241,7 +258,7 @@ public enum MembershipStatus {
 @available(iOS 11.2, *)
 public extension SKProductSubscriptionPeriod {
     
-    var localizedDuration: String {
+    var localizedDurationVerbose: String {
         let isPlural = !(numberOfUnits == 1)
         var periodType = isPlural ? NSLocalizedString("Weeks", comment: "") : NSLocalizedString("Week", comment: "");
         
@@ -273,6 +290,27 @@ public extension SKProduct {
         numberFormatter.numberStyle = .currency
         numberFormatter.locale = locale
         return numberFormatter.string(from: price)
+    }
+    
+    
+    var hasFreeTrial: Bool {
+        if #available(iOS 12.2, *) {
+            let subscriptionOffers = self.discounts
+            
+            return subscriptionOffers.reduce(false) { partialResult, discount in
+                return discount.price == 0 || partialResult
+            }
+        }
+        
+        return false
+    }
+}
+
+public extension Array where Element == SKProduct {
+    var withoutTips: [SKProduct] {
+        return self.filter { product in
+            !product.localizedTitle.contains("Tip")
+        }
     }
 }
 

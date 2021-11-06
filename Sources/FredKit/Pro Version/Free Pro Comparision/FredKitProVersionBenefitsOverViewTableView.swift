@@ -23,12 +23,15 @@ public class FredKitProVersionBenefitsOverViewTableView: UITableView {
         didSet {
             self.dataSource = self
             self.delegate = self
+
+
             
             self.register(UINib(nibName: "FreeProComparisionTableViewCell", bundle: Bundle.module), forCellReuseIdentifier: "FreeProComparisionTableViewCell")
             
             self.reloadData()
         }
     }
+    
     
 }
 
@@ -58,6 +61,7 @@ extension FredKitProVersionBenefitsOverViewTableView: UITableViewDelegate, UITab
             cell.leftColumnTitleText = "Free"
             cell.rightColumnTitleText = "Pro"
             cell.benefitTitleText = ""
+            cell.isFirstRow = true
         } else if indexPath.section == 1 {
             cell.benefitTitleText = includedInProVersion!.freeVersionIncludes[indexPath.row]
             cell.leftColumnIsAvailable = true
@@ -66,13 +70,17 @@ extension FredKitProVersionBenefitsOverViewTableView: UITableViewDelegate, UITab
             cell.benefitTitleText = includedInProVersion!.proVersionAlsoIncludes[indexPath.row]
             cell.leftColumnIsAvailable = false
             cell.rightColumnIsAvailable = true
+            
+            if indexPath.row == includedInProVersion!.proVersionAlsoIncludes.count - 1 {
+                cell.isLastRow = true
+            }
         }
         
         return cell
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 44.0
+        return 46.0
     }
     
     

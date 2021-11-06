@@ -14,6 +14,9 @@ class FreeProComparisionTableViewCell: UITableViewCell {
     @IBOutlet weak var rightColumnTitle: UILabel!
     @IBOutlet weak var leftColumnIcon: UIImageView!
     @IBOutlet weak var rightColumnIcon: UIImageView!
+    @IBOutlet weak var secondColumnBackgroundView: UIView!
+    
+    
     
     var leftColumnTitleText: String? {
         didSet {
@@ -63,9 +66,39 @@ class FreeProComparisionTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    var isFirstRow: Bool = false {
+        didSet {
+            if isFirstRow {
+                let maskLayer = CAShapeLayer()
+                maskLayer.path = UIBezierPath(roundedRect: secondColumnBackgroundView.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 12, height: 12)).cgPath
+                self.secondColumnBackgroundView.layer.mask = maskLayer
+            }
+        }
+    }
+    
+    var isLastRow: Bool = false {
+        didSet {
+            if isLastRow {
+                if #available(iOS 11.0, *) {
+                    secondColumnBackgroundView.clipsToBounds = true
+                    secondColumnBackgroundView.layer.cornerRadius = 12
+                    secondColumnBackgroundView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+                }
+                separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+            }
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+    }
+    
     override func prepareForReuse() {
         leftColumnTitle.isHidden = true
         rightColumnTitle.isHidden = true
+        isLastRow = false
+        isFirstRow = false
+        separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
 }

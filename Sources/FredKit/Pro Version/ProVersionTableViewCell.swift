@@ -11,6 +11,8 @@ public class ProVersionTableViewCell: UITableViewCell {
     
     @IBOutlet weak var proComparisionTableView: FredKitProVersionBenefitsOverViewTableView!
     
+    @IBOutlet weak var upgradeOptionsTableView: FredKitUpgradeOptionsTableView!
+    
     @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var tryProButton: FredKitButton!
@@ -28,24 +30,18 @@ public class ProVersionTableViewCell: UITableViewCell {
         ], proVersionAlsoIncludes: [
             "Unlimited Tracking",
             "Charts",
-            "Long-Term Stats"
+            "Long-Term Stats",
+            "Import .fit and .gpx"
         ])
         
-        let attributedButtonString = NSMutableAttributedString()
-        let titleString = NSAttributedString(string: "Try “Pro” for Free for 1 Month", attributes: [:
-            
-        ])
-        attributedButtonString.append(titleString)
-        
-        let subTitleString = NSAttributedString(string: "Renews to annual subscription after for 29,99€", attributes: [:
-            
-        ])
-        attributedButtonString.append(subTitleString)
-        tryProButton.setAttributedTitle(attributedButtonString, for: .normal)
+        FredKitSubscriptionManager.shared.waitForCachedProducts { products in
+            self.upgradeOptionsTableView.availableProducts = products.withoutTips
+        }
+
         
         proComparisionTableView.includedInProVersion = includedInProVersion
         
-        tableViewHeightConstraint.constant = CGFloat(includedInProVersion.count + 1) * 44
+        tableViewHeightConstraint.constant = CGFloat(includedInProVersion.count + 1) * 46
         // Initialization code
     }
 
