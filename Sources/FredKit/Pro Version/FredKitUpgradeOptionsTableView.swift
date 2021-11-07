@@ -45,9 +45,9 @@ extension FredKitUpgradeOptionsTableView: UITableViewDelegate, UITableViewDataSo
         
         if let currentlySelectedIndexpath = self.currentlySelectedIndexpath {
             if currentlySelectedIndexpath == indexPath {
-                cell.isSelected = true
+                cell.selectedByUser = true
             } else {
-                cell.isSelected = false
+                cell.selectedByUser = false
             }
         }
         

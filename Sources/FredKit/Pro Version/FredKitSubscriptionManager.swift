@@ -294,11 +294,9 @@ public extension SKProduct {
     
     
     var hasFreeTrial: Bool {
-        if #available(iOS 12.2, *) {
-            let subscriptionOffers = self.discounts
-            
-            return subscriptionOffers.reduce(false) { partialResult, discount in
-                return discount.price == 0 || partialResult
+        if #available(iOS 11.2, *) {
+            if let introductoryPrice = self.introductoryPrice {
+                return introductoryPrice.price == 0
             }
         }
         
@@ -310,6 +308,12 @@ public extension Array where Element == SKProduct {
     var withoutTips: [SKProduct] {
         return self.filter { product in
             !product.localizedTitle.contains("Tip")
+        }
+    }
+    
+    var freeTrialProduct: SKProduct? {
+        self.first { product in
+            return product.hasFreeTrial
         }
     }
 }

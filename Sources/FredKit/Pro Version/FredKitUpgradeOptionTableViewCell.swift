@@ -67,11 +67,12 @@ class FredKitUpgradeOptionTableViewCell: UITableViewCell {
         }
     }
     
-    override var isSelected: Bool {
+    var selectedByUser: Bool = false {
         didSet {
-            if super.isSelected {
+            if selectedByUser {
                 if #available(iOS 13.0, *) {
                     selectionCheckmark.image = UIImage(systemName: "checkmark.circle.fill")
+                    selectionCheckmark.tintColor = .systemBlue
                     startButton.isHidden = false
                     self.layer.borderWidth = 2
                     self.layer.borderColor = UIColor.systemBlue.cgColor
@@ -79,10 +80,13 @@ class FredKitUpgradeOptionTableViewCell: UITableViewCell {
             } else {
                 if #available(iOS 13.0, *) {
                     selectionCheckmark.image = UIImage(systemName: "circle")
+                    selectionCheckmark.tintColor = .secondaryLabel
                     startButton.isHidden = true
                     self.layer.borderWidth = 0
                 }
             }
+            
+            self.resizeToFitContent()
         }
     }
     
