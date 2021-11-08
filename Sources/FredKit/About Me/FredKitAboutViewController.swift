@@ -127,6 +127,9 @@ public class FredKitAboutViewController: UITableViewController {
                     self.navigationItem.rightBarButtonItem = done
                 }
             }
+        } else {
+            let done = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+            self.navigationItem.rightBarButtonItem = done
         }
     }
     
