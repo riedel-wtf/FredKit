@@ -8,7 +8,7 @@ import Foundation
 import SwiftyStoreKit
 import StoreKit
 
-public class FredKitIncludedInProVersion: NSObject {
+@objc public class FredKitIncludedInProVersion: NSObject {
     
     @objc public init(freeVersionIncludes: [String], proVersionAlsoIncludes: [String]) {
         self.freeVersionIncludes = freeVersionIncludes
