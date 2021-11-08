@@ -54,12 +54,15 @@
                                 </subviews>
                             </stackView>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SLx-QC-1dt" customClass="FredKitButton" customModule="FredKit">
-                                <rect key="frame" x="0.0" y="167" width="275" height="44"/>
+                                <rect key="frame" x="0.0" y="167" width="275" height="50"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="Usr-BD-Kk0"/>
+                                    <constraint firstAttribute="height" constant="50" id="Usr-BD-Kk0"/>
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Start Now"/>
+                                <connections>
+                                    <action selector="purchaseProduct:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="NCl-vj-5tc"/>
+                                </connections>
                             </button>
                         </subviews>
                         <constraints>
@@ -101,6 +104,7 @@
                 <outlet property="moreDetailInfosLabel" destination="wj8-W3-uhG" id="nyO-1D-KXF"/>
                 <outlet property="planTitleLabel" destination="auz-oG-dZA" id="5GM-7U-gZS"/>
                 <outlet property="priceInfoLabel" destination="bjb-Py-yMZ" id="zQw-J6-Y0d"/>
+                <outlet property="purchaseProductButton" destination="SLx-QC-1dt" id="eXK-CF-ip1"/>
                 <outlet property="selectionCheckmark" destination="mxh-rq-6NU" id="mUA-gM-ExT"/>
                 <outlet property="startButton" destination="SLx-QC-1dt" id="sg4-jy-6PZ"/>
             </connections>

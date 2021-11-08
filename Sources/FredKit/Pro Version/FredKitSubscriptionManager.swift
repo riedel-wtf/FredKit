@@ -8,6 +8,23 @@ import Foundation
 import SwiftyStoreKit
 import StoreKit
 
+@objc public class FredKitProductOptions: NSObject {
+    
+    public init(tips: [String], subscriptionOptions: [String], lifeTimeUnlockOptions: [String]) {
+        self.tips = tips
+        self.subscriptionOptions = subscriptionOptions
+        self.lifeTimeUnlockOptions = lifeTimeUnlockOptions
+    }
+    
+    var tips: [String]
+    var subscriptionOptions: [String]
+    var lifeTimeUnlockOptions: [String]
+    
+    var allProductIds: [String] {
+        tips + subscriptionOptions + lifeTimeUnlockOptions
+    }
+}
+
 @objc public protocol FredKitSubscriptionManagerDelegate {
     @objc func didFinishFetchingProducts(products: [SKProduct])
 }
@@ -21,7 +38,7 @@ public enum MembershipStatus {
     @objc public static let shared = FredKitSubscriptionManager()
     
     private var sharedSecret: String!
-    private var productIds: [String]!
+    internal var productOptions: FredKitProductOptions!
     
     var delegate: FredKitSubscriptionManagerDelegate!
     
@@ -39,8 +56,8 @@ public enum MembershipStatus {
         }
     }
     
-    @objc public static func setup(productIds: [String], sharedSecret: String? = nil, delegate: FredKitSubscriptionManagerDelegate) {
-        shared.productIds = productIds
+    @objc public static func setup(productOptions: FredKitProductOptions, sharedSecret: String? = nil, delegate: FredKitSubscriptionManagerDelegate) {
+        shared.productOptions = productOptions
         if let sharedSecret = sharedSecret {
             shared.sharedSecret = sharedSecret
         }
@@ -52,7 +69,7 @@ public enum MembershipStatus {
     
     
     private func prefetchProducts() {
-        let productIdSet = Set<String>(self.productIds)
+        let productIdSet = Set<String>(self.productOptions.allProductIds)
         SwiftyStoreKit.retrieveProductsInfo(productIdSet) { result in
             self.cachedProducts = Array(result.retrievedProducts)
             print(self.cachedProducts)
@@ -149,8 +166,10 @@ public enum MembershipStatus {
                 
                 // Verify the purchase of a Subscription
                 var expirationDates = [Date]()
+
+                let unlockProductIds = self.productOptions.lifeTimeUnlockOptions + self.productOptions.subscriptionOptions
                 
-                self.productIds.forEach({ (productId) in
+                unlockProductIds.forEach({ (productId) in
                     let purchaseResult = SwiftyStoreKit.verifySubscription(
                         ofType: .autoRenewable,
                         productId: productId,
@@ -283,6 +302,35 @@ public extension SKProductSubscriptionPeriod {
     }
 }
 
+@available(iOS 11.2, *)
+extension SKProductSubscriptionPeriod: Comparable {
+    public static func < (lhs: SKProductSubscriptionPeriod, rhs: SKProductSubscriptionPeriod) -> Bool {
+        return lhs.timeInterval < rhs.timeInterval
+    }
+    
+    var timeInterval: TimeInterval {
+        Double(self.numberOfUnits) * self.unit.timeInterval
+    }
+}
+
+@available(iOS 11.2, *)
+extension SKProduct.PeriodUnit {
+    var timeInterval: TimeInterval {
+        switch self {
+        case .day:
+            return TimeInterval.day
+        case .week:
+            return TimeInterval.week
+        case .month:
+            return TimeInterval.month
+        case .year:
+            return TimeInterval.year
+        @unknown default:
+            return 0
+        }
+    }
+}
+
 public extension SKProduct {
     var localizedPriceString: String? {
         let numberFormatter = NumberFormatter()
@@ -305,9 +353,28 @@ public extension SKProduct {
 }
 
 public extension Array where Element == SKProduct {
-    var withoutTips: [SKProduct] {
+    
+    var filterForTipProducts: [SKProduct] {
         return self.filter { product in
-            !product.localizedTitle.contains("Tip")
+            FredKitSubscriptionManager.shared.productOptions.tips.contains(product.productIdentifier)
+        }
+    }
+    
+    var filterForLifeTimeUnlockProducts: [SKProduct] {
+        return self.filter { product in
+            FredKitSubscriptionManager.shared.productOptions.lifeTimeUnlockOptions.contains(product.productIdentifier)
+        }
+    }
+    
+    var filterForSubscriptionProducts: [SKProduct] {
+        return self.filter { product in
+            FredKitSubscriptionManager.shared.productOptions.subscriptionOptions.contains(product.productIdentifier)
+        }.sorted { product1, product2 in
+            if #available(iOS 11.2, *) {
+                return product1.subscriptionPeriod! > product2.subscriptionPeriod!
+            } else {
+                return true
+            }
         }
     }
     

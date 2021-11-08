@@ -13,11 +13,13 @@ public class ProVersionTableViewCell: UITableViewCell {
     
     @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var learnMoreButton: UIButton!
+    @IBOutlet weak var mainRedeemButton: FredKitButton!
     
     @IBOutlet weak var renewalInfoLabel: UILabel!
     
+    @IBOutlet weak var learnMoreButton: UIButton!
     
+    @IBOutlet weak var redeemStackView: UIStackView!
     
     @IBOutlet weak var upgradeTitleLabel: UILabel!
     
@@ -30,6 +32,24 @@ public class ProVersionTableViewCell: UITableViewCell {
     
     @IBAction func learnMore(_ sender: Any) {
         
+        
+        
+        if let freeTrialProduct = FredKitSubscriptionManager.shared.cachedProducts.freeTrialProduct {
+            mainRedeemButton.showLoading()
+            FredKitSubscriptionManager.shared.purchaseSubscription(forProduct: freeTrialProduct) { success in
+                self.mainRedeemButton.hideLoading()
+            }
+        } else {
+            self.openUpgradeDetailView()
+        }
+    }
+    
+    
+    @IBAction func smallLearnMoreButton(_ sender: Any) {
+        self.openUpgradeDetailView()
+    }
+    
+    private func openUpgradeDetailView() {
         if #available(iOS 13.0, *) {
             let upgradeDetailVC = FredKitUpgradeDetailTableViewController(style: .insetGrouped)
             UIViewController.topViewController()?.present(upgradeDetailVC.wrappedInNavigationController, animated: true)
@@ -37,8 +57,6 @@ public class ProVersionTableViewCell: UITableViewCell {
             let upgradeDetailVC = FredKitUpgradeDetailTableViewController(style: .grouped)
             UIViewController.topViewController()?.present(upgradeDetailVC.wrappedInNavigationController, animated: true)
         }
-        
-        
     }
     
     public override func awakeFromNib() {
@@ -60,8 +78,9 @@ public class ProVersionTableViewCell: UITableViewCell {
             .foregroundColor: UIColor.white
         ])
         
-        self.learnMoreButton.setAttributedTitle(title, for: .normal)
+        self.mainRedeemButton.setAttributedTitle(title, for: .normal)
         self.renewalInfoLabel.isHidden = true
+        self.learnMoreButton.isHidden = true
         
         FredKitSubscriptionManager.shared.waitForCachedProducts { products in
             
@@ -74,9 +93,11 @@ public class ProVersionTableViewCell: UITableViewCell {
                             .foregroundColor: UIColor.white
                         ])
                         
-                        self.learnMoreButton.setAttributedTitle(title, for: .normal)
+                        self.mainRedeemButton.setAttributedTitle(title, for: .normal)
                         
                         self.renewalInfoLabel.isHidden = false
+                        self.learnMoreButton.isHidden = false
+                        
                         self.renewalInfoLabel.text = "Then only \(localizedPriceString) every \(freeTrialProduct.subscriptionPeriod!.localizedDurationVerbose)."
                         
                         self.resizeToFitContent()

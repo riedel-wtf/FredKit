@@ -25,7 +25,7 @@ class FredKitUpgradeDetailTableViewController: UITableViewController {
         self.tableView.register(UINib(nibName: "ProVersionTableViewCell", bundle: Bundle.module), forCellReuseIdentifier: "ProVersionTableViewCell")
         
         FredKitSubscriptionManager.shared.waitForCachedProducts { products in
-            self.availableProducts = products.withoutTips
+            self.availableProducts = products.filterForSubscriptionProducts + products.filterForLifeTimeUnlockProducts
             
             self.currentlySelectedIndexpath = IndexPath(row: 0, section: 1)
             self.previouslySelectedIndexPath = self.currentlySelectedIndexpath
@@ -65,8 +65,7 @@ class FredKitUpgradeDetailTableViewController: UITableViewController {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ProVersionTableViewCell", for: indexPath) as! ProVersionTableViewCell
 
-            cell.learnMoreButton.isHidden = true
-            cell.renewalInfoLabel.isHidden = true
+            cell.redeemStackView.isHidden = true 
             cell.upgradeTitleLabel.isHidden = true
             cell.upgradeHeaderLabel.isHidden = true
         

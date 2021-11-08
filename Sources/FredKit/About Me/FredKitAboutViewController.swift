@@ -68,11 +68,9 @@ public class FredKitAboutViewController: UITableViewController {
     
     public var inAppPurchaseCells = [InAppPurchaseCell]() {
         didSet {
-            let productIds = inAppPurchaseCells.map { inAppCell in
-                inAppCell.productID
+            FredKitSubscriptionManager.shared.waitForCachedProducts { products in
+                self.tableView.reloadData()
             }
-            
-            FredKitSubscriptionManager.setup(productIds: productIds, delegate: self)
         }
     }
     
@@ -350,8 +348,3 @@ public class FredKitAboutViewController: UITableViewController {
     }
 }
 
-extension FredKitAboutViewController: FredKitSubscriptionManagerDelegate {
-    public func didFinishFetchingProducts(products: [SKProduct]) {
-        self.tableView.reloadData()
-    }
-}

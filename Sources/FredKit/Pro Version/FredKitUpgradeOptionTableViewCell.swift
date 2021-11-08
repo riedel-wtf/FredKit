@@ -67,6 +67,16 @@ class FredKitUpgradeOptionTableViewCell: UITableViewCell {
         }
     }
     
+    @IBOutlet weak var purchaseProductButton: FredKitButton!
+    
+    @IBAction func purchaseProduct(_ sender: Any) {
+        purchaseProductButton.showLoading()
+        FredKitSubscriptionManager.shared.purchaseSubscription(forProduct: product!) { success in
+            self.purchaseProductButton.hideLoading()
+        }
+    }
+    
+    
     var selectedByUser: Bool = false {
         didSet {
             if selectedByUser {
@@ -87,6 +97,11 @@ class FredKitUpgradeOptionTableViewCell: UITableViewCell {
             }
             
             self.resizeToFitContent()
+            if #available(iOS 10.0, *) {
+                Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false) { _ in
+                    self.resizeToFitContent()
+                }
+            }
         }
     }
     
