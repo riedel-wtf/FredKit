@@ -51,6 +51,7 @@ public enum MembershipStatus {
     private var sharedSecret: String!
     internal var productOptions: FredKitProductOptions!
     var includedInProVersion: FredKitIncludedInProVersion!
+    var proTitle: String!
     
     public var cachedProducts = [SKProduct]()
     
@@ -68,9 +69,10 @@ public enum MembershipStatus {
     
     
     
-    @objc public static func setup(productOptions: FredKitProductOptions, includedInProVersion: FredKitIncludedInProVersion, sharedSecret: String? = nil) {
+    @objc public static func setup(productOptions: FredKitProductOptions, includedInProVersion: FredKitIncludedInProVersion, proTitle: String, sharedSecret: String? = nil) {
         shared.productOptions = productOptions
         shared.includedInProVersion = includedInProVersion
+        shared.proTitle = proTitle
         if let sharedSecret = sharedSecret {
             shared.sharedSecret = sharedSecret
         }

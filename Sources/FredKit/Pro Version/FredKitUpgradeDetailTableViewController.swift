@@ -18,7 +18,7 @@ class FredKitUpgradeDetailTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.title = "FredKit Pro"
+        self.title = FredKitSubscriptionManager.shared.proTitle
         
         self.tableView.register(UINib(nibName: "FredKitUpgradeOptionTableViewCell", bundle: Bundle.module), forCellReuseIdentifier: "FredKitUpgradeOptionTableViewCell")
         

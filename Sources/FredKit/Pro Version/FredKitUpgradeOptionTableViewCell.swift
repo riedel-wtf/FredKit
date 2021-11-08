@@ -25,19 +25,28 @@ class FredKitUpgradeOptionTableViewCell: UITableViewCell {
     var product: SKProduct? {
         didSet {
             if let product = product {
-                moreDetailInfosLabel.isHidden = true
+                
                 
                 var attributedString = NSAttributedString(string: "Start Now", attributes: [
                     .foregroundColor: UIColor.white,
                     .font: UIFont.systemFont(ofSize: 17, weight: .semibold)
                 ])
                 
+                if #available(iOS 14.0, *) {
+                    if product.isFamilyShareable {
+                        moreDetailInfosLabel.isHidden = false
+                        moreDetailInfosLabel.text = "You can share this plan with up to 5 family members via iCloud Family Sharing."
+                    } else {
+                        moreDetailInfosLabel.isHidden = true
+                    }
+                } else {
+                    moreDetailInfosLabel.isHidden = true
+                }
+                
                 if #available(iOS 11.2, *) {
                     if let subscriptionPeriod = product.subscriptionPeriod {
                         if subscriptionPeriod.unit == .year {
                             planTitleLabel.text = "Pro Plan (Annual)"
-                            moreDetailInfosLabel.isHidden = false
-                            moreDetailInfosLabel.text = "You can share this plan with up to 5 family members via iCloud Family Sharing."
                         } else if subscriptionPeriod.unit == .month {
                             planTitleLabel.text = "Pro Plan (Monthly)"
                         }
@@ -52,7 +61,7 @@ class FredKitUpgradeOptionTableViewCell: UITableViewCell {
                         }
                         
                     } else {
-                        planTitleLabel.text = "Pro Plan Lifetime Unlock"
+                        planTitleLabel.text = "Pro Plan (Lifetime Unlock)"
                         annotationView.isHidden = true
                         attributedString = NSAttributedString(string: "Activate", attributes: [
                             .foregroundColor: UIColor.white,

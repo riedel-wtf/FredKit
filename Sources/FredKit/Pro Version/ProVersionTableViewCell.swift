@@ -62,6 +62,7 @@ import UIKit
     public override func awakeFromNib() {
         super.awakeFromNib()
         
+        upgradeHeaderLabel.text = "Upgrade now to \(FredKitSubscriptionManager.shared.proTitle!)".uppercased()
         
         let title = NSAttributedString(string: "Learn more", attributes: [
             .font: UIFont.systemFont(ofSize: 17, weight: .semibold),
