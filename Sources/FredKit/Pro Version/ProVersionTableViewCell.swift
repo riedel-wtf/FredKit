@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class ProVersionTableViewCell: UITableViewCell {
+@objc public class ProVersionTableViewCell: UITableViewCell {
     
     @IBOutlet weak var proComparisionTableView: FredKitProVersionBenefitsOverViewTableView!
     

@@ -10,7 +10,7 @@ import StoreKit
 
 @objc public class FredKitProductOptions: NSObject {
     
-    public init(tips: [String], subscriptionOptions: [String], lifeTimeUnlockOptions: [String]) {
+    @objc public init(tips: [String], subscriptionOptions: [String], lifeTimeUnlockOptions: [String]) {
         self.tips = tips
         self.subscriptionOptions = subscriptionOptions
         self.lifeTimeUnlockOptions = lifeTimeUnlockOptions
