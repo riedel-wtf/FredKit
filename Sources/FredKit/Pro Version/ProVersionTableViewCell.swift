@@ -32,8 +32,6 @@ import UIKit
     
     @IBAction func learnMore(_ sender: Any) {
         
-        
-        
         if let freeTrialProduct = FredKitSubscriptionManager.shared.cachedProducts.freeTrialProduct {
             mainRedeemButton.showLoading()
             FredKitSubscriptionManager.shared.purchaseSubscription(forProduct: freeTrialProduct) { success in

@@ -106,7 +106,7 @@ class FredKitUpgradeOptionTableViewCell: UITableViewCell {
             }
             
             self.resizeToFitContent()
-            if #available(iOS 10.0, *) {
+            if #available(iOS 13.0, *) {
                 Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false) { _ in
                     self.resizeToFitContent()
                 }

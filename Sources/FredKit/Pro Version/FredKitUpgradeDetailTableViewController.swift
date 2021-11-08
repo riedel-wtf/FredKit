@@ -8,14 +8,14 @@
 import UIKit
 import StoreKit
 
-class FredKitUpgradeDetailTableViewController: UITableViewController {
+@objc public class FredKitUpgradeDetailTableViewController: UITableViewController {
         
     var previouslySelectedIndexPath: IndexPath?
     var currentlySelectedIndexpath: IndexPath?
     
     var availableProducts: [SKProduct] = []
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
 
         self.title = FredKitSubscriptionManager.shared.proTitle
@@ -51,16 +51,16 @@ class FredKitUpgradeDetailTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    public override func numberOfSections(in tableView: UITableView) -> Int {
         return 1 + availableProducts.count
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
 
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
      
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ProVersionTableViewCell", for: indexPath) as! ProVersionTableViewCell
@@ -90,7 +90,7 @@ class FredKitUpgradeDetailTableViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         currentlySelectedIndexpath = indexPath
         if let previouslySelectedIndexPath = self.previouslySelectedIndexPath {
@@ -105,19 +105,19 @@ class FredKitUpgradeDetailTableViewController: UITableViewController {
         previouslySelectedIndexPath = indexPath
     }
     
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    public override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 6.0
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    public override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 6.0
     }
     
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    public override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    public override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return UIView()
     }
     

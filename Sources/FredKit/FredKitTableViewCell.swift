@@ -18,7 +18,5 @@ public extension UITableViewCell {
             tableView.beginUpdates()
             tableView.endUpdates()
         }
-    }
-    
-    
+    }   
 }
