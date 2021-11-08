@@ -8,14 +8,7 @@
 import Foundation
 import UIKit
 
-public struct FredKitIncludedInProVersion {
-    var freeVersionIncludes: [String]
-    var proVersionAlsoIncludes: [String]
-    
-    var count: Int {
-        freeVersionIncludes.count + proVersionAlsoIncludes.count
-    }
-}
+
 
 public class FredKitProVersionBenefitsOverViewTableView: UITableView {
     
@@ -23,15 +16,12 @@ public class FredKitProVersionBenefitsOverViewTableView: UITableView {
         didSet {
             self.dataSource = self
             self.delegate = self
-
-
             
             self.register(UINib(nibName: "FreeProComparisionTableViewCell", bundle: Bundle.module), forCellReuseIdentifier: "FreeProComparisionTableViewCell")
             
             self.reloadData()
         }
     }
-    
     
 }
 

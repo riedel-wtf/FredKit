@@ -8,6 +8,21 @@ import Foundation
 import SwiftyStoreKit
 import StoreKit
 
+public class FredKitIncludedInProVersion: NSObject {
+    
+    @objc public init(freeVersionIncludes: [String], proVersionAlsoIncludes: [String]) {
+        self.freeVersionIncludes = freeVersionIncludes
+        self.proVersionAlsoIncludes = proVersionAlsoIncludes
+    }
+    
+    var freeVersionIncludes: [String]
+    var proVersionAlsoIncludes: [String]
+    
+    var count: Int {
+        freeVersionIncludes.count + proVersionAlsoIncludes.count
+    }
+}
+
 @objc public class FredKitProductOptions: NSObject {
     
     @objc public init(tips: [String], subscriptionOptions: [String], lifeTimeUnlockOptions: [String]) {
@@ -25,10 +40,6 @@ import StoreKit
     }
 }
 
-@objc public protocol FredKitSubscriptionManagerDelegate {
-    @objc func didFinishFetchingProducts(products: [SKProduct])
-}
-
 public enum MembershipStatus {
     case notPurchased, subscribed, expired
 }
@@ -39,8 +50,7 @@ public enum MembershipStatus {
     
     private var sharedSecret: String!
     internal var productOptions: FredKitProductOptions!
-    
-    var delegate: FredKitSubscriptionManagerDelegate!
+    var includedInProVersion: FredKitIncludedInProVersion!
     
     public var cachedProducts = [SKProduct]()
     
@@ -56,12 +66,14 @@ public enum MembershipStatus {
         }
     }
     
-    @objc public static func setup(productOptions: FredKitProductOptions, sharedSecret: String? = nil, delegate: FredKitSubscriptionManagerDelegate) {
+    
+    
+    @objc public static func setup(productOptions: FredKitProductOptions, includedInProVersion: FredKitIncludedInProVersion, sharedSecret: String? = nil) {
         shared.productOptions = productOptions
+        shared.includedInProVersion = includedInProVersion
         if let sharedSecret = sharedSecret {
             shared.sharedSecret = sharedSecret
         }
-        shared.delegate = delegate
         shared.prefetchProducts()
         shared.completePendingTransactions()
     }
@@ -73,7 +85,7 @@ public enum MembershipStatus {
         SwiftyStoreKit.retrieveProductsInfo(productIdSet) { result in
             self.cachedProducts = Array(result.retrievedProducts)
             print(self.cachedProducts)
-            self.delegate.didFinishFetchingProducts(products: self.cachedProducts)
+            
             self.cachedProductsCompletionHandlers.forEach { completion in
                 completion(self.cachedProducts)
             }

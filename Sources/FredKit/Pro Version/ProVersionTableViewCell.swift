@@ -62,16 +62,6 @@ import UIKit
     public override func awakeFromNib() {
         super.awakeFromNib()
         
-        let includedInProVersion = FredKitIncludedInProVersion(freeVersionIncludes: [
-            "Apple Watch Tracking",
-            "Basic Stats"
-        ], proVersionAlsoIncludes: [
-            "Unlimited Tracking",
-            "Charts",
-            "Long-Term Stats",
-            "Import .fit and .gpx"
-        ])
-        
         
         let title = NSAttributedString(string: "Learn more", attributes: [
             .font: UIFont.systemFont(ofSize: 17, weight: .semibold),
@@ -107,9 +97,9 @@ import UIKit
             
         }
         
-        proComparisionTableView.includedInProVersion = includedInProVersion
+        proComparisionTableView.includedInProVersion = FredKitSubscriptionManager.shared.includedInProVersion
         
-        tableViewHeightConstraint.constant = CGFloat(includedInProVersion.count + 1) * 46
+        tableViewHeightConstraint.constant = CGFloat(FredKitSubscriptionManager.shared.includedInProVersion.count + 1) * 46
         // Initialization code
     }
     
