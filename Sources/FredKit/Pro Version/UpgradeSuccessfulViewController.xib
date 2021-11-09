@@ -12,7 +12,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UpgradeSuccessfulViewController" customModule="FredKit">
             <connections>
-                <outlet property="getStartedButton" destination="vZA-5V-pJL" id="8yg-1o-N7F"/>
+                <outlet property="activeExplanationLabel" destination="WYe-pn-7Lg" id="zUa-Fg-xFC"/>
+                <outlet property="activeLabel" destination="xeJ-34-GMd" id="fqm-ti-PQZ"/>
+                <outlet property="getStartedButton" destination="vZA-5V-pJL" id="9z2-iB-YKe"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

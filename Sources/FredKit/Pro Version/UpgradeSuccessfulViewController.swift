@@ -9,16 +9,27 @@ import UIKit
 
 class UpgradeSuccessfulViewController: UIViewController {
 
+    @IBOutlet weak var activeLabel: UILabel!
+    @IBOutlet weak var activeExplanationLabel: UILabel!
+    @IBOutlet weak var getStartedButton: FredKitButton!
+    
     @objc static var viewController: UpgradeSuccessfulViewController {
         return UpgradeSuccessfulViewController(nibName: "UpgradeSuccessfulViewController", bundle: Bundle.module)
     }
     
-    @IBOutlet weak var getStartedButton: FredKitButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden = true
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        
+        activeLabel.text = "\(FredKitSubscriptionManager.shared.proTitle!) Active"
+        activeExplanationLabel.text = "You now have access to all Pro features! On top of that, you‘re supporting the further development of \(UIApplication.shared.appName)!"
+        
+        let attributedString = NSAttributedString(string: "Let‘s get started", attributes: [
+            .font: UIFont.systemFont(ofSize: 17, weight: .semibold)
+        ])
+        getStartedButton.setAttributedTitle(attributedString, for: .normal)
         // Do any additional setup after loading the view.
     }
 
