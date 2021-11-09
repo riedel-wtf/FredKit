@@ -31,6 +31,13 @@ import StoreKit
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didChangeSubscriptionStatus),
+            name: NSNotification.Name(rawValue: "upgradedToPro"),
+            object: nil
+        )
 
         self.title = FredKitSubscriptionManager.shared.proTitle
         
@@ -51,6 +58,13 @@ import StoreKit
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Restore", style: .plain, target: self, action: #selector(restore))
         
+    }
+    
+    @objc func didChangeSubscriptionStatus() {
+        if FredKitSubscriptionManager.shared.isCurrentlySubscribed {
+            let upgradeSuccessfulVC = UpgradeSuccessfulViewController(nibName: "UpgradeSuccessfulViewController", bundle: Bundle.module)
+            self.navigationController?.pushViewController(upgradeSuccessfulVC, animated: true)
+        }
     }
     
     @objc func close() {

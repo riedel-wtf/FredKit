@@ -60,6 +60,10 @@ class FredKitUpgradeOptionTableViewCell: UITableViewCell {
                             priceInfoLabel.text = "\(product.localizedPrice!) per \(subscriptionPeriod.localizedDurationVerbose)."
                         }
                         
+                        if let monthlyPrice = product.breakDownMonthlyPrice {
+                            priceInfoLabel.text! += " That‘s only \(monthlyPrice) per month!"
+                        }
+                        
                     } else {
                         planTitleLabel.text = "Pro Plan (Lifetime Unlock)"
                         annotationView.isHidden = true

@@ -36,6 +36,8 @@ import UIKit
             mainRedeemButton.showLoading()
             FredKitSubscriptionManager.shared.purchaseSubscription(forProduct: freeTrialProduct) { success in
                 self.mainRedeemButton.hideLoading()
+                let upgradeSuccessfullVC = UpgradeSuccessfulViewController.viewController
+                UIViewController.topViewController()?.present(upgradeSuccessfullVC, animated: true)
             }
         } else {
             self.openUpgradeDetailView()
@@ -82,6 +84,11 @@ import UIKit
                         self.learnMoreButton.isHidden = false
                         
                         self.renewalInfoLabel.text = "Then only \(localizedPriceString) every \(freeTrialProduct.subscriptionPeriod!.localizedDurationVerbose)."
+                        
+                        
+                        if let monthlyPrice = freeTrialProduct.breakDownMonthlyPrice {
+                            self.renewalInfoLabel.text! += " (That‘s \(monthlyPrice) per month!)"
+                        }
                         
                         self.resizeToFitContent()
                     }

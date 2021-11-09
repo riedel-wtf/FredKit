@@ -25,7 +25,7 @@ public extension UIColor {
     }
     
     var isLightColor: Bool {
-        return brightness > 0.7
+        return brightness > 0.5
     }
     
     var goodContrastColor: UIColor {

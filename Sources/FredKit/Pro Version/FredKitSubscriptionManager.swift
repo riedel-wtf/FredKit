@@ -209,6 +209,7 @@ public enum MembershipStatus {
                     let membershipInformation = ["expirationDate": expirationDates.first!]
                     defaults.set(membershipInformation, forKey: "membershipStatus")
                     defaults.synchronize()
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "upgradedToPro"), object: nil)
                 }
                 completion()
                 
@@ -353,6 +354,31 @@ public extension SKProduct {
         numberFormatter.locale = locale
         return numberFormatter.string(from: price)
     }
+    
+    var breakDownMonthlyPrice: String? {
+        
+        if #available(iOS 11.2, *) {
+            if let timeInterval = self.subscriptionPeriod?.timeInterval {
+                
+                if timeInterval <= TimeInterval.month {
+                    // doesnt make sense to display montly prices for subscription periods smaller than one month
+                    return nil
+                }
+                
+                let numberOfMonths = timeInterval / TimeInterval.month
+                let pricePerMonth = price.doubleValue / numberOfMonths
+                
+                let numberFormatter = NumberFormatter()
+                let locale = priceLocale
+                numberFormatter.numberStyle = .currency
+                numberFormatter.locale = locale
+                return numberFormatter.string(from: NSNumber(value: pricePerMonth))
+            }
+        }
+        
+        return nil
+    }
+    
     
     
     var hasFreeTrial: Bool {
