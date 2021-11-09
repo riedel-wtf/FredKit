@@ -83,9 +83,11 @@ class FredKitUpgradeOptionTableViewCell: UITableViewCell {
     @IBOutlet weak var purchaseProductButton: FredKitButton!
     
     @IBAction func purchaseProduct(_ sender: Any) {
+        print("User selected product: \(product!.localizedTitle)")
         purchaseProductButton.showLoading()
         FredKitSubscriptionManager.shared.purchaseSubscription(forProduct: product!) { success in
             self.purchaseProductButton.hideLoading()
+            print("Purchase successfull: \(self.product!.localizedTitle)")
         }
     }
     

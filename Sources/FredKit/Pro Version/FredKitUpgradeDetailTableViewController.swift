@@ -61,10 +61,17 @@ import StoreKit
     }
     
     @objc func didChangeSubscriptionStatus() {
+        print("Did Change Subscription Status: \(FredKitSubscriptionManager.shared.isCurrentlySubscribed)")
+        
+        #if DEBUG
+        let upgradeSuccessfulVC = UpgradeSuccessfulViewController(nibName: "UpgradeSuccessfulViewController", bundle: Bundle.module)
+        self.navigationController?.pushViewController(upgradeSuccessfulVC, animated: true)
+        #else
         if FredKitSubscriptionManager.shared.isCurrentlySubscribed {
             let upgradeSuccessfulVC = UpgradeSuccessfulViewController(nibName: "UpgradeSuccessfulViewController", bundle: Bundle.module)
             self.navigationController?.pushViewController(upgradeSuccessfulVC, animated: true)
         }
+        #endif
     }
     
     @objc func close() {
