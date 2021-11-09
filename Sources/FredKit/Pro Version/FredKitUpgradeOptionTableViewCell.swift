@@ -8,6 +8,10 @@
 import UIKit
 import StoreKit
 
+protocol FredKitUpgradeOptionTableViewCellDelegate {
+    func didSuccessfullyPurchase(product: SKProduct)
+}
+
 class FredKitUpgradeOptionTableViewCell: UITableViewCell {
 
     @IBOutlet weak var annotationView: UIView!
@@ -21,6 +25,7 @@ class FredKitUpgradeOptionTableViewCell: UITableViewCell {
     
     @IBOutlet weak var selectionCheckmark: UIImageView!
     
+    var delegate: FredKitUpgradeOptionTableViewCellDelegate?
     
     var product: SKProduct? {
         didSet {
@@ -87,6 +92,11 @@ class FredKitUpgradeOptionTableViewCell: UITableViewCell {
         purchaseProductButton.showLoading()
         FredKitSubscriptionManager.shared.purchaseSubscription(forProduct: product!) { success in
             self.purchaseProductButton.hideLoading()
+            
+            if success {
+                self.delegate?.didSuccessfullyPurchase(product: self.product!)
+            }
+            
             print("Purchase successfull: \(self.product!.localizedTitle)")
         }
     }

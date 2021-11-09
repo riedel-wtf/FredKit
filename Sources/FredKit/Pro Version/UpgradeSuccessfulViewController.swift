@@ -27,7 +27,8 @@ class UpgradeSuccessfulViewController: UIViewController {
         activeExplanationLabel.text = "You now have access to all Pro features! On top of that, you‘re supporting the further development of \(UIApplication.shared.appName)!"
         
         let attributedString = NSAttributedString(string: "Let‘s get started", attributes: [
-            .font: UIFont.systemFont(ofSize: 17, weight: .semibold)
+            .font: UIFont.systemFont(ofSize: 17, weight: .semibold),
+            .foregroundColor: UIColor.black
         ])
         getStartedButton.setAttributedTitle(attributedString, for: .normal)
         // Do any additional setup after loading the view.

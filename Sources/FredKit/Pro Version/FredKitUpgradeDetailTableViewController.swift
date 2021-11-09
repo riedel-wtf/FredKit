@@ -63,15 +63,10 @@ import StoreKit
     @objc func didChangeSubscriptionStatus() {
         print("Did Change Subscription Status: \(FredKitSubscriptionManager.shared.isCurrentlySubscribed)")
         
-        #if DEBUG
-        let upgradeSuccessfulVC = UpgradeSuccessfulViewController(nibName: "UpgradeSuccessfulViewController", bundle: Bundle.module)
-        self.navigationController?.pushViewController(upgradeSuccessfulVC, animated: true)
-        #else
         if FredKitSubscriptionManager.shared.isCurrentlySubscribed {
             let upgradeSuccessfulVC = UpgradeSuccessfulViewController(nibName: "UpgradeSuccessfulViewController", bundle: Bundle.module)
             self.navigationController?.pushViewController(upgradeSuccessfulVC, animated: true)
         }
-        #endif
     }
     
     @objc func close() {
@@ -111,6 +106,8 @@ import StoreKit
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FredKitUpgradeOptionTableViewCell", for: indexPath) as! FredKitUpgradeOptionTableViewCell
 
+        cell.delegate = self
+        
         let product = availableProducts[index]
         cell.product = product
         
@@ -158,4 +155,11 @@ import StoreKit
     
     
     
+}
+
+extension FredKitUpgradeDetailTableViewController: FredKitUpgradeOptionTableViewCellDelegate {
+    func didSuccessfullyPurchase(product: SKProduct) {
+        let upgradeSuccessfulVC = UpgradeSuccessfulViewController(nibName: "UpgradeSuccessfulViewController", bundle: Bundle.module)
+        self.navigationController?.pushViewController(upgradeSuccessfulVC, animated: true)
+    }
 }
