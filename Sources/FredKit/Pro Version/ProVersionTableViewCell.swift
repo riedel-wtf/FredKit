@@ -48,13 +48,7 @@ import UIKit
     }
     
     private func openUpgradeDetailView() {
-        if #available(iOS 13.0, *) {
-            let upgradeDetailVC = FredKitUpgradeDetailTableViewController(style: .insetGrouped)
-            UIViewController.topViewController()?.present(upgradeDetailVC.wrappedInNavigationController, animated: true)
-        } else {
-            let upgradeDetailVC = FredKitUpgradeDetailTableViewController(style: .grouped)
-            UIViewController.topViewController()?.present(upgradeDetailVC.wrappedInNavigationController, animated: true)
-        }
+        FredKitUpgradeDetailTableViewController.show()
     }
     
     public override func awakeFromNib() {

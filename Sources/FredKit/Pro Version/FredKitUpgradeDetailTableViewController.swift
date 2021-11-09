@@ -10,6 +10,20 @@ import StoreKit
 
 @objc public class FredKitUpgradeDetailTableViewController: UITableViewController {
         
+    @objc public static func show() {
+        let detailVC = FredKitUpgradeDetailTableViewController.insetGroupedStyle.wrappedInNavigationController
+        detailVC.modalPresentationStyle = .formSheet
+        UIViewController.topViewController()?.present(detailVC, animated: true)
+    }
+    
+    @objc public static var insetGroupedStyle: FredKitUpgradeDetailTableViewController {
+        if #available(iOS 13.0, *) {
+            return FredKitUpgradeDetailTableViewController(style: .insetGrouped)
+        } else {
+            return FredKitUpgradeDetailTableViewController(style: .grouped)
+        }
+    }
+    
     var previouslySelectedIndexPath: IndexPath?
     var currentlySelectedIndexpath: IndexPath?
     
