@@ -16,11 +16,11 @@ import Foundation
 //
 import UIKit
 
-enum FredKitButtonStyle {
+public enum FredKitButtonStyle {
     case filled, bordered, empty
 }
 
-@IBDesignable class FredKitButton: UIButton {
+@IBDesignable public class FredKitButton: UIButton {
 
     var cornerRadius: CGFloat! = 16 {
         didSet {
@@ -34,14 +34,14 @@ enum FredKitButtonStyle {
         }
     }
     
-    override var tintColor: UIColor! {
+    public override var tintColor: UIColor! {
         didSet {
             super.tintColor = tintColor
             refreshUI()
         }
     }
     
-    override func awakeFromNib() {
+    public override func awakeFromNib() {
         super.awakeFromNib()
         refreshUI()
     }
