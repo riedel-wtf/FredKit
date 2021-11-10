@@ -17,8 +17,8 @@ public func NSLocalizedString(_ key: String) -> String {
     return localizedValue
 }
 
-public func FredKitLocalizedString(string: String, args: CVarArg...) -> String {
-    let localizedString = NSLocalizedString(string, bundle: Bundle.module, comment: "")
+public func FredKitLocalizedString(string: String, bundle: Bundle, args: CVarArg...) -> String {
+    let localizedString = NSLocalizedString(string, bundle: bundle, comment: "")
     
     let localizedFormattedString = String(format: localizedString, arguments: args)
     
