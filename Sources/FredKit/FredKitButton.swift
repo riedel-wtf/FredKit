@@ -89,7 +89,7 @@ public enum FredKitButtonStyle {
         return activityIndicator
     }()
     
-    func showLoading() {
+    @objc public func showLoading() {
         activityIndicator.startAnimating()
         var buttonStates: [ButtonState] = []
         for state in [UIControl.State.disabled] {
@@ -103,7 +103,7 @@ public enum FredKitButtonStyle {
         isEnabled = false
     }
     
-    func hideLoading() {
+    @objc public func hideLoading() {
         activityIndicator.stopAnimating()
         for buttonState in buttonStates {
             setAttributedTitle(buttonState.title, for: buttonState.state)
