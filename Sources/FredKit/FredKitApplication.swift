@@ -46,18 +46,5 @@ public extension UIApplication {
         let bundleID = Bundle.main.bundleIdentifier!
         return bundleID
     }
-    
-    @available(iOS 13.0, *)
-    var appStoreUrl: URL? {
-        if let currentApp = FredKitApps.app(for: UIApplication.shared.bundleID) {
-            return URL(string: currentApp.url)
-        }
-        
-        if bundleID == "wtf.riedel.FredKit-Test-App" {
-            return URL(string: "https://test-app.riedel.wtf")
-        }
-        
-        return nil
-    }
-    
+     
 }
