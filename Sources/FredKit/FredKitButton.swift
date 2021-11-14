@@ -1,19 +1,13 @@
 //
-//  File.swift
-//  
-//
-//  Created by Frederik Riedel on 05.11.21.
-//
-
-import Foundation
-
-//
 //  FredKitButton.swift
 //  FredKit
 //
 //  Created by Frederik Riedel on 6/17/20.
 //  Copyright © 2020 Frogg GmbH. All rights reserved.
 //
+
+#if !os(watchOS)
+import Foundation
 import UIKit
 
 public enum FredKitButtonStyle {
@@ -113,3 +107,4 @@ public enum FredKitButtonStyle {
     }
     
 }
+#endif

@@ -6,6 +6,7 @@
 //  Copyright © 2019 Frederik Riedel. All rights reserved.
 //
 
+#if !os(watchOS)
 import Foundation
 import UIKit
 
@@ -21,3 +22,4 @@ public extension UIView {
         return nil
     }
 }
+#endif

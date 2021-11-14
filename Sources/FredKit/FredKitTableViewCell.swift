@@ -5,6 +5,7 @@
 //  Created by Frederik Riedel on 07.11.21.
 //
 
+#if !os(watchOS)
 import Foundation
 import UIKit
 
@@ -20,3 +21,4 @@ public extension UITableViewCell {
         }
     }   
 }
+#endif

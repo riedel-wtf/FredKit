@@ -7,6 +7,7 @@
 //
 
 import Foundation
+#if canImport(QuartzCore)
 import QuartzCore
 
 public extension CALayer {
@@ -18,3 +19,4 @@ public extension CALayer {
         }
     }
 }
+#endif

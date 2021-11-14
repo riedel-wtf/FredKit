@@ -5,6 +5,7 @@
 //  Created by Frederik Riedel on 11/8/20.
 //
 
+#if !os(watchOS)
 import Foundation
 import UIKit
 
@@ -48,3 +49,4 @@ public extension UIApplication {
     }
      
 }
+#endif
