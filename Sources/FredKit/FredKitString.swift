@@ -31,6 +31,14 @@ public extension String {
     func isAlmostEqualTo(otherString: String) -> Bool {
         return levenshtein(otherString) < 4
     }
+    
+    var urlEncodedQuery: String {
+        self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+    }
+    
+    var urlEncodedHost: String {
+        self.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+    }
 }
 
 // https://gist.github.com/RuiCarneiro/82bf91214e3e09222233b1fc04139c86
