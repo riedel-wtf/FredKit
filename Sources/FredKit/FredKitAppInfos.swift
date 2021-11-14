@@ -5,34 +5,37 @@
 //  Created by Frederik Riedel on 11/8/20.
 //
 
-#if !os(watchOS)
 import Foundation
+#if os(iOS)
 import UIKit
+#endif
 
-public extension UIApplication {
-    var humanReadableVersionString: String {
+public struct AppInfos {
+    
+    public static var humanReadableVersionString: String {
         return "\(versionString) build \(buildNumber)"
     }
     
-    var buildNumber: String {
+    public static var buildNumber: String {
         let dictionary = Bundle.main.infoDictionary!
         let build = dictionary["CFBundleVersion"] as! String
         return build
     }
     
-    var versionString: String {
+    public static var versionString: String {
         let dictionary = Bundle.main.infoDictionary!
         let version = dictionary["CFBundleShortVersionString"] as! String
         return version
     }
     
-    var appName: String {
+    public static var appName: String {
         let dictionary = Bundle.main.infoDictionary!
         let appName = dictionary["CFBundleName"] as! String
         return appName
     }
     
-    var appIcon: UIImage? {
+    #if os(iOS)
+    public static var appIcon: UIImage? {
         let dictionary = Bundle.main.infoDictionary!
         if let bundleIcons = dictionary["CFBundleIcons"] as? [String: Any],
            let primaryIcons = bundleIcons["CFBundlePrimaryIcon"] as? [String: Any],
@@ -42,11 +45,11 @@ public extension UIApplication {
         }
         return nil
     }
+    #endif
     
-    var bundleID: String {
+    public static var bundleID: String {
         let bundleID = Bundle.main.bundleIdentifier!
         return bundleID
     }
-     
 }
-#endif
+
