@@ -14,7 +14,7 @@ public extension CALayer {
     func setContinousCorner(radius: CGFloat) {
         self.cornerRadius = radius
         self.masksToBounds = true
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, *), #available(macOS 10.15, *) {
             self.cornerCurve = .continuous
         }
     }
