@@ -5,7 +5,7 @@
 //  Created by Frederik Riedel on 07.11.21.
 //
 
-#if !os(watchOS)
+#if os(iOS)
 import Foundation
 import UIKit
 

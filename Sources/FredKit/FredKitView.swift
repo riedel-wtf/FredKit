@@ -6,7 +6,7 @@
 //  Copyright © 2019 Frederik Riedel. All rights reserved.
 //
 
-#if !os(watchOS)
+#if os(iOS)
 import Foundation
 import UIKit
 
