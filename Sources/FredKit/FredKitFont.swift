@@ -6,6 +6,7 @@
 //  Copyright © 2019 Frederik Riedel. All rights reserved.
 //
 
+#if os(iOS)
 import Foundation
 import UIKit
 
@@ -20,3 +21,4 @@ public extension UIFont {
         return self
     }
 }
+#endif

@@ -9,7 +9,6 @@
 import Foundation
 import CommonCrypto
 import CoreGraphics
-import UIKit
 
 public extension String {
     var firstCharacterCapitalized: String {
@@ -84,6 +83,9 @@ public extension String {
     }
 }
 
+#if os(iOS)
+import UIKit
+
 //https://stackoverflow.com/questions/9976454/cgpathref-from-string
 public extension String {
     func path(withFont font: UIFont) -> CGPath {
@@ -141,3 +143,5 @@ public extension NSAttributedString {
         return path
     }
 }
+
+#endif

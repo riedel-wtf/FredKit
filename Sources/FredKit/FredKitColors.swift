@@ -6,6 +6,7 @@
 //  Copyright © 2018 Frederik Riedel. All rights reserved.
 //
 
+#if os(iOS)
 import Foundation
 import UIKit
 
@@ -36,3 +37,4 @@ public extension UIColor {
         return .white
     }
 }
+#endif
