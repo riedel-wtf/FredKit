@@ -43,6 +43,13 @@ public extension Date {
         return dateFormatter.string(from: self)
     }
     
+    var minuteTimeString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeStyle = .short
+        return dateFormatter.string(from: self)
+    }
+    
     var shortDateString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
