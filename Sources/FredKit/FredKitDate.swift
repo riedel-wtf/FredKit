@@ -19,7 +19,7 @@ public extension Date {
         } else if calendar.isDateInYesterday(self) {
             // yesterday
             return NSLocalizedString("Yesterday", comment: "")
-        } else if -(self.timeIntervalSinceNow)/60/60/24 < 4 {
+        } else if self.isInCurrentWeek {
             // show weekday
             let formatterWeekday = DateFormatter()
             formatterWeekday.dateFormat = "EEEE"
@@ -29,6 +29,15 @@ public extension Date {
         
         // show date
         return DateFormatter.localizedString(from: self, dateStyle: .medium, timeStyle: .none)
+    }
+    
+    var isInCurrentWeek: Bool {
+        var startDate = Date()
+        var interval : TimeInterval = 0.0
+        let calendar = Calendar.current
+        let _ = calendar.dateInterval(of: .weekOfYear, start: &startDate, interval: &interval, for: Date())
+        let endDate = calendar.date(byAdding:.second, value: Int(interval), to: startDate)!
+        return self >= startDate && self < endDate
     }
     
     var humanReadableDateAndTimeString: String {
@@ -66,8 +75,19 @@ public extension Date {
     
     var shortMonth: String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM '‘'yy"
+        dateFormatter.dateFormat = "MMM"
         return dateFormatter.string(from: self)
+    }
+    
+    var shortDayOfMonth: String {
+        let template = "dd"
+        let locale = NSLocale.current // the device current locale
+        
+        let format = DateFormatter.dateFormat(fromTemplate: template, options: 0, locale: locale)
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        
+        return formatter.string(from: self)
     }
     
     var shortDate: String {
@@ -97,6 +117,43 @@ public extension Date {
     
     var isInFuture: Bool {
         return self.timeIntervalSinceNow > 0
+    }
+    
+    var startOfDay: Date {
+        return Calendar.current.startOfDay(for: self)
+    }
+    
+    var endOfDay: Date {
+        var components = DateComponents()
+        components.day = 1
+        components.second = -1
+        return Calendar.current.date(byAdding: components, to: startOfDay)!
+    }
+    
+    var startOfMonth: Date {
+        let components = Calendar.current.dateComponents([.year, .month], from: startOfDay)
+        return Calendar.current.date(from: components)!
+    }
+    
+    var midOfMonth: Date {
+        var components = Calendar.current.dateComponents([.year, .month], from: startOfDay)
+        components.day = 15
+        return Calendar.current.date(from: components)!
+    }
+    
+    var endOfMonth: Date {
+        var components = DateComponents()
+        components.month = 1
+        components.second = -1
+        return Calendar.current.date(byAdding: components, to: startOfMonth)!
+    }
+    
+    var nextDay: Date {
+        let calendar = NSCalendar.current
+        var dayFutureComponents = DateComponents()
+        dayFutureComponents.day = 1 // aka 1 day
+        
+        return calendar.date(byAdding: dayFutureComponents, to: self)!
     }
 }
 
