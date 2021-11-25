@@ -9,6 +9,10 @@ final class FredKit_PackageTests: XCTestCase {
         XCTAssertEqual(TimeInterval.day, 60*60*24)
         XCTAssertEqual(TimeInterval.week, 60*60*24*7)
         XCTAssertEqual(TimeInterval.year, 60*60*24*365)
+        
+        let currentDate = Date()
+        XCTAssertEqual(currentDate.startOfWeek, currentDate)
+        XCTAssertEqual(currentDate.endOfWeek, currentDate)
     }
     
     static var allTests = [

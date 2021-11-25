@@ -177,47 +177,66 @@ public extension Array where Element == FredKitDataPoint {
         })
     }
     
-    func segmentedDataPoints(for timeIntervalConfiguration: ChartTimeIntervalConfiguration) -> [ Date: [Element] ] {
+    @available(iOS 10.0, *)
+    func segmentedDataPoints(for timeIntervalConfiguration: ChartTimeIntervalConfiguration, completion: @escaping ([ Date: [Element] ]) -> Void) {
         
         let segmentIntervals = timeIntervalConfiguration.segmentIntervals
+        
+        let backgroundQueue = DispatchQueue(label: "data point calculations", qos: .userInteractive, attributes: .concurrent)
+        let dispatchGroup = DispatchGroup()
         
         var segmentedDataPoints = [Date: [Element]]()
         
         segmentIntervals.forEach { interval in
-            segmentedDataPoints[interval.0] = self.filteredDataPoints(forTimeFrame: interval.0, to: interval.1)
-        }
-        
-        return segmentedDataPoints
-    }
-    
-    func accumulate(for timeIntervalConfiguration: ChartTimeIntervalConfiguration, accumulationType: AccumulationType) -> [FredKitDataPoint] {
-        
-        let segmentedDataPoints = self.segmentedDataPoints(for: timeIntervalConfiguration)
-        
-        return segmentedDataPoints.keys.map { keyDate in
-            
-            var value = 0.1
-            
-            if let dataPointsForSegment = segmentedDataPoints[keyDate] {
-                switch accumulationType {
-                case .min:
-                    value = dataPointsForSegment.minimumValue
-                case .max:
-                    value = dataPointsForSegment.maximumValue
-                case .sum:
-                    value = dataPointsForSegment.sum
-                case .average:
-                    value = dataPointsForSegment.average
-                case .count:
-                    value = Double(dataPointsForSegment.count)
+            dispatchGroup.enter()
+            backgroundQueue.async {
+                let filteredDataPoints = self.filteredDataPoints(forTimeFrame: interval.start, to: interval.end)
+                DispatchQueue.main.async {
+                    segmentedDataPoints[interval.end] = filteredDataPoints
+                    dispatchGroup.leave()
                 }
             }
-            
-            return FredKitSimpleDataPoint(value: value, timeStamp: keyDate)
-            
-            
-        }.sorted { dp1, dp2 in
-            return dp1.timeStamp < dp2.timeStamp
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            completion(segmentedDataPoints)
+        }
+    }
+    
+    @available(iOS 10.0, *)
+    func accumulate(for timeIntervalConfiguration: ChartTimeIntervalConfiguration, accumulationType: AccumulationType, completion: @escaping ([FredKitDataPoint]) -> Void) {
+        
+        let backgroundQueue = DispatchQueue(label: "data point calculations", qos: .userInteractive)
+        
+        backgroundQueue.async {
+            self.segmentedDataPoints(for: timeIntervalConfiguration) { segmentedDataPoints in
+                let accumulatedDPs = segmentedDataPoints.keys.map { keyDate -> FredKitSimpleDataPoint in
+                    
+                    var value = 0.1
+                    
+                    if let dataPointsForSegment = segmentedDataPoints[keyDate] {
+                        switch accumulationType {
+                        case .min:
+                            value = dataPointsForSegment.minimumValue
+                        case .max:
+                            value = dataPointsForSegment.maximumValue
+                        case .sum:
+                            value = dataPointsForSegment.sum
+                        case .average:
+                            value = dataPointsForSegment.average
+                        case .count:
+                            value = Double(dataPointsForSegment.count)
+                        }
+                    }
+                    
+                    return FredKitSimpleDataPoint(value: value, timeStamp: keyDate)
+                }.sorted { dp1, dp2 in
+                    return dp1.timeStamp < dp2.timeStamp
+                }
+                DispatchQueue.main.async {
+                    completion(accumulatedDPs)
+                }
+            }
         }
     }
     
@@ -351,3 +370,4 @@ extension NSDictionary {
         }
     }
 }
+

@@ -79,6 +79,10 @@ public extension Date {
         return dateFormatter.string(from: self)
     }
     
+    var singleCharacterMonth: String {        
+        return shortMonth.firstCharacer
+    }
+    
     var shortDayOfMonth: String {
         let template = "dd"
         let locale = NSLocale.current // the device current locale
@@ -130,13 +134,24 @@ public extension Date {
         return Calendar.current.date(byAdding: components, to: startOfDay)!
     }
     
+    var startOfWeek: Date {
+        Calendar.current.dateComponents([.calendar, .yearForWeekOfYear, .weekOfYear], from: self).date!
+    }
+    
+    var endOfWeek: Date {
+        var components = DateComponents()
+        components.weekOfYear = 1
+        components.second = -1
+        return Calendar.current.date(byAdding: components, to: startOfWeek)!
+    }
+    
     var startOfMonth: Date {
-        let components = Calendar.current.dateComponents([.year, .month], from: startOfDay)
+        let components = Calendar.current.dateComponents([.year, .month], from: self)
         return Calendar.current.date(from: components)!
     }
     
     var midOfMonth: Date {
-        var components = Calendar.current.dateComponents([.year, .month], from: startOfDay)
+        var components = Calendar.current.dateComponents([.year, .month], from: startOfMonth)
         components.day = 15
         return Calendar.current.date(from: components)!
     }
@@ -146,6 +161,18 @@ public extension Date {
         components.month = 1
         components.second = -1
         return Calendar.current.date(byAdding: components, to: startOfMonth)!
+    }
+    
+    var startOfYear: Date {
+        let components = Calendar.current.dateComponents([.year], from: startOfDay)
+        return Calendar.current.date(from: components)!
+    }
+    
+    var endOfYear: Date {
+        var components = DateComponents()
+        components.year = 1
+        components.day = -1
+        return Calendar.current.date(byAdding: components, to: startOfYear)!
     }
     
     var nextDay: Date {
@@ -158,3 +185,12 @@ public extension Date {
 }
 
 
+@available(iOS 10.0, *)
+extension NSDateInterval {
+    func humanReadableDateInterval(shouldContainDay: Bool) -> String {
+        let formatter = DateIntervalFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter.string(from: startDate, to: endDate)
+    }
+}

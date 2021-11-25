@@ -38,6 +38,21 @@ public extension String {
     var urlEncodedHost: String {
         self.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
     }
+    
+    var firstCharacer: String {
+        return String(self.characterAtIndex(index: 0)!)
+    }
+    
+    func characterAtIndex(index: Int) -> Character? {
+        var cur = 0
+        for char in self {
+            if cur == index {
+                return char
+            }
+            cur += 1
+        }
+        return nil
+    }
 }
 
 // https://gist.github.com/RuiCarneiro/82bf91214e3e09222233b1fc04139c86
@@ -98,48 +113,48 @@ public extension String {
 public extension NSAttributedString {
     func path() -> CGPath {
         let path = CGMutablePath()
-
+        
         // Use CoreText to lay the string out as a line
         let line = CTLineCreateWithAttributedString(self as CFAttributedString)
-
+        
         // Iterate the runs on the line
         let runArray = CTLineGetGlyphRuns(line)
         let numRuns = CFArrayGetCount(runArray)
         for runIndex in 0..<numRuns {
-
+            
             // Get the font for this run
             let run = unsafeBitCast(CFArrayGetValueAtIndex(runArray, runIndex), to: CTRun.self)
             let runAttributes = CTRunGetAttributes(run) as Dictionary
             let runFont = runAttributes[kCTFontAttributeName] as! CTFont
-
+            
             // Iterate the glyphs in this run
             let numGlyphs = CTRunGetGlyphCount(run)
             for glyphIndex in 0..<numGlyphs {
                 let glyphRange = CFRangeMake(glyphIndex, 1)
-
+                
                 // Get the glyph
                 var glyph : CGGlyph = 0
                 withUnsafeMutablePointer(to: &glyph) { glyphPtr in
                     CTRunGetGlyphs(run, glyphRange, glyphPtr)
                 }
-
+                
                 // Get the position
                 var position : CGPoint = .zero
                 withUnsafeMutablePointer(to: &position) {positionPtr in
                     CTRunGetPositions(run, glyphRange, positionPtr)
                 }
-
+                
                 // Get a path for the glyph
                 guard let glyphPath = CTFontCreatePathForGlyph(runFont, glyph, nil) else {
                     continue
                 }
-
+                
                 // Transform the glyph as it is added to the final path
                 let t = CGAffineTransform(translationX: position.x, y: position.y)
                 path.addPath(glyphPath, transform: t)
             }
         }
-
+        
         return path
     }
 }

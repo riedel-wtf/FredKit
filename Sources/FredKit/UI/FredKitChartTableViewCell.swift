@@ -9,69 +9,127 @@
 import UIKit
 import Charts
 
-public struct ChartTimeIntervalConfiguration {
+public enum ChartTimeInterval {
+    case day, week, month, sixMonths, year
     
-    public init(endDate: Date, representedTimeInterval: TimeInterval) {
-        self.endDate = endDate.midOfMonth
-        self.granularity = .day
-        self.startDate = endDate
-        self.representedTimeInterval = representedTimeInterval
-        self.refreshInternalData()
+    
+    var numberOfSegmentsPerPage: Int {
+        switch self {
+        case .day:
+            return 24
+        case .week:
+            return 7
+        case .month:
+            return 30
+        case .sixMonths:
+            return 6
+        case .year:
+            return 12
+        }
     }
     
-    var startDate: Date
-    var endDate: Date
-    var granularity: TimeInterval
+    var timeInterval: TimeInterval {
+        switch self {
+        case .day:
+            return .day
+        case .week:
+            return .week
+        case .month:
+            return .month
+        case .sixMonths:
+            return 6 * .month
+        case .year:
+            return .year
+        }
+    }
     
-    var representedTimeInterval: TimeInterval {
+    func startDate(for date: Date) -> Date {
+        switch self {
+        case .day:
+            return date.startOfDay
+        case .week:
+            return date.startOfWeek
+        case .month:
+            return date.startOfMonth
+        case .sixMonths:
+            return date.startOfMonth
+        case .year:
+            return date.startOfYear
+        }
+    }
+    
+    func endDate(for date: Date) -> Date {
+        switch self {
+        case .day:
+            return date.endOfDay
+        case .week:
+            return date.endOfWeek
+        case .month:
+            return date.endOfMonth
+        case .sixMonths:
+            return date.endOfMonth
+        case .year:
+            return date.endOfYear
+        }
+    }
+}
+
+public struct ChartTimeIntervalConfiguration {
+    
+    var chartTimeInterval: ChartTimeInterval {
         didSet {
             self.refreshInternalData()
         }
     }
     
-    mutating private func refreshInternalData() {
-        if representedTimeInterval == .week {
-            startDate = endDate.addingTimeInterval(-.week + .day)
-            granularity = .day
-        } else if representedTimeInterval == .month {
-            startDate = endDate.addingTimeInterval(-.month)
-            granularity = .day
-        } else if representedTimeInterval == 6 * .month {
-            startDate = endDate.addingTimeInterval(-6 * .month)
-            granularity = .week
-        } else if representedTimeInterval == .year {
-            startDate = endDate.addingTimeInterval(-.year + .month)
-            granularity = .month
-        }
+    var endDate: Date
+    var startDate: Date
+    
+    var numberOfSegmentsPerPage: Int {
+        return chartTimeInterval.numberOfSegmentsPerPage
     }
     
-    mutating func moveBackward() {
-        startDate.addTimeInterval(-granularity)
-        endDate.addTimeInterval(-granularity)
+    var numberOfPages: Double {
+        return totalTimeInterval / pageTimeInterval
     }
     
-    mutating func moveForward() {
-        startDate.addTimeInterval(granularity)
-        endDate.addTimeInterval(granularity)
+    var segmentTimeInterval: TimeInterval {
+        return totalTimeInterval / Double(totalNumberOfSegments)
     }
     
+    public init(dataPoints: [FredKitDataPoint], chartTimeInterval: ChartTimeInterval) {
+        self.chartTimeInterval = chartTimeInterval
+        self.endDate = chartTimeInterval.endDate(for: dataPoints.endDate)
+        self.startDate = chartTimeInterval.startDate(for: dataPoints.startDate)
+        self.refreshInternalData()
+    }
     
+    var pageTimeInterval: TimeInterval {
+        return chartTimeInterval.timeInterval
+    }
     
-    var timeInterval: TimeInterval {
+    var totalTimeInterval: TimeInterval {
         return endDate.timeIntervalSince(startDate)
     }
     
-    var numberOfSegments: Int {
-        return Int(timeInterval / granularity)
+    var totalNumberOfSegments: Int {
+        return Int(Double(numberOfSegmentsPerPage) * numberOfPages)
     }
     
-    var segmentIntervals: [(Date, Date)] {
-        var intervals = [(Date, Date)]()
+    mutating private func refreshInternalData() {
+        self.startDate = self.chartTimeInterval.startDate(for: startDate)
+        self.endDate = self.chartTimeInterval.endDate(for: endDate)
+    }
+    
+    
+    @available(iOS 10.0, *)
+    var segmentIntervals: [DateInterval] {
+        var intervals = [DateInterval]()
         
-        (0..<numberOfSegments).forEach { intervalIndex in
-            let startDate = startDate.addingTimeInterval(granularity * Double(intervalIndex))
-            let endDate = startDate.addingTimeInterval(granularity)
-            intervals.append((startDate, endDate))
+        (0..<totalNumberOfSegments).forEach { intervalIndex in
+            let startDate = startDate.addingTimeInterval(segmentTimeInterval * Double(intervalIndex))
+            let endDate = startDate.addingTimeInterval(segmentTimeInterval)
+            intervals.append(DateInterval(start: startDate, end: endDate))
         }
         
         return intervals
@@ -82,12 +140,12 @@ public class FredKitChartTableViewCell: UITableViewCell {
     
     @IBOutlet weak var chartView: BarChartView!
     @IBOutlet weak var filterbutton: UIButton!
-    @IBOutlet weak var rightButton: UIButton!
-    @IBOutlet weak var leftButton: UIButton!
-    @IBOutlet weak var leftButtonBackgroundView: UIVisualEffectView!
-    @IBOutlet weak var rightButtonBackgroundView: UIVisualEffectView!
+
     
-    @IBOutlet weak var dateSelectionBackgroundView: UIStackView!
+    
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+    
+    
     
     
     @IBOutlet weak var bigValueLabel: UILabel!
@@ -118,13 +176,13 @@ public class FredKitChartTableViewCell: UITableViewCell {
         
         if var timeIntervalConfiguration = timeIntervalConfiguration {
             if sender.selectedSegmentIndex == 0 {
-                timeIntervalConfiguration.representedTimeInterval = .week
+                timeIntervalConfiguration.chartTimeInterval = .week
             } else if sender.selectedSegmentIndex == 1 {
-                timeIntervalConfiguration.representedTimeInterval = .month
+                timeIntervalConfiguration.chartTimeInterval = .month
             } else if sender.selectedSegmentIndex == 2 {
-                timeIntervalConfiguration.representedTimeInterval = 6 * .month
+                timeIntervalConfiguration.chartTimeInterval = .sixMonths
             } else if sender.selectedSegmentIndex == 3 {
-                timeIntervalConfiguration.representedTimeInterval = .year
+                timeIntervalConfiguration.chartTimeInterval = .year
             }
             
             self.timeIntervalConfiguration = timeIntervalConfiguration
@@ -134,14 +192,8 @@ public class FredKitChartTableViewCell: UITableViewCell {
         self.refreshChart()
     }
     
-    @IBAction func moveBackward(_ sender: Any) {
-        self.timeIntervalConfiguration?.moveBackward()
-        self.refreshChart()
-    }
-    
-    @IBAction func moveForward(_ sender: Any) {
-        self.timeIntervalConfiguration?.moveForward()
-        self.refreshChart()
+    public override func prepareForReuse() {
+        loadingIndicator.stopAnimating()
     }
     
     
@@ -151,26 +203,24 @@ public class FredKitChartTableViewCell: UITableViewCell {
         
         if let timeIntervalConfiguration = timeIntervalConfiguration, let dataPoints = dataPoints {
             
-            if timeIntervalConfiguration.representedTimeInterval == .week {
+            switch timeIntervalConfiguration.chartTimeInterval {
+            case .day:
                 timeIntervalSelection.selectedSegmentIndex = 0
-                chartView.xAxis.setLabelCount(7, force: true)
-                chartView.setVisibleXRange(minXRange: .week, maxXRange: .week)
-            } else if timeIntervalConfiguration.representedTimeInterval == .month {
+            case .week:
+                timeIntervalSelection.selectedSegmentIndex = 0
+            case .month:
                 timeIntervalSelection.selectedSegmentIndex = 1
-                chartView.xAxis.setLabelCount(5, force: true)
-                chartView.setVisibleXRange(minXRange: .month, maxXRange: .month)
-            } else if timeIntervalConfiguration.representedTimeInterval == 6 * .month {
+            case .sixMonths:
                 timeIntervalSelection.selectedSegmentIndex = 2
-                chartView.xAxis.setLabelCount(6, force: true)
-                chartView.setVisibleXRange(minXRange: 6 * .month, maxXRange: 6 * .month)
-            } else if timeIntervalConfiguration.representedTimeInterval == .year {
+            case .year:
                 timeIntervalSelection.selectedSegmentIndex = 3
-                chartView.xAxis.setLabelCount(12, force: true)
-                chartView.setVisibleXRange(minXRange: .year, maxXRange: .year)
             }
             
+            chartView.xAxis.setLabelCount(timeIntervalConfiguration.numberOfSegmentsPerPage, force: false)
+            chartView.xAxis.granularity = timeIntervalConfiguration.segmentTimeInterval
             
             chartView.xAxis.enabled = true
+            chartView.xAxis.centerAxisLabelsEnabled = true
             
             
             if #available(iOS 13.0, *) {
@@ -181,8 +231,8 @@ public class FredKitChartTableViewCell: UITableViewCell {
                 chartView.xAxis.labelTextColor = UIColor.black
             }
             
-            chartView.xAxis.axisMinimum = timeIntervalConfiguration.startDate.startOfDay.timeIntervalSince1970
-            chartView.xAxis.axisMaximum = timeIntervalConfiguration.endDate.startOfDay.timeIntervalSince1970
+            chartView.xAxis.axisMinimum = timeIntervalConfiguration.startDate.timeIntervalSince1970
+            chartView.xAxis.axisMaximum = timeIntervalConfiguration.endDate.timeIntervalSince1970
             
             chartView.xAxis.labelPosition = .bottom
             
@@ -217,21 +267,25 @@ public class FredKitChartTableViewCell: UITableViewCell {
                 return "\(Int(value))"
             })
             
+            chartView.xAxis.avoidFirstLastClippingEnabled = false
+            
             chartView.xAxis.valueFormatter = DefaultAxisValueFormatter(block: { (value, base) -> String in
                 let date = Date(timeIntervalSince1970: value)
                 
                 
-                if timeIntervalConfiguration.representedTimeInterval == .week {
+                switch timeIntervalConfiguration.chartTimeInterval {
+                case .day:
+                    return date.shortTimeString
+                case .week:
                     return date.shortWeekDay
-                } else if timeIntervalConfiguration.representedTimeInterval == .month {
+                case .month:
                     return date.shortDayOfMonth
-                } else if timeIntervalConfiguration.representedTimeInterval == 6 * .month {
-                    return date.shortMonth
-                } else if timeIntervalConfiguration.representedTimeInterval == .year {
-                    return date.shortMonth
+                case .sixMonths:
+                    return date.singleCharacterMonth
+                case .year:
+                    return date.singleCharacterMonth
                 }
                 
-                return date.humanReadableDateString
             })
             
             chartView.leftAxis.enabled = false
@@ -247,26 +301,32 @@ public class FredKitChartTableViewCell: UITableViewCell {
             chartView.drawGridBackgroundEnabled = false
             chartView.delegate = self
             
-            let accumulatedDataPoints = dataPoints.accumulate(for: timeIntervalConfiguration, accumulationType: .average)
-            let dataEntries = accumulatedDataPoints.barChartDataEntries
+            loadingIndicator.startAnimating()
+            if #available(iOS 10.0, *) {
+                dataPoints.accumulate(for: timeIntervalConfiguration, accumulationType: .sum) { accumulatedDataPoints in
+                    
+                    self.loadingIndicator.stopAnimating()
+                    let dataEntries = accumulatedDataPoints.barChartDataEntries
+                    
+                    
+                    let barChartDataSet = BarChartDataSet(entries: dataEntries, label: "Bar Chart")
+                    barChartDataSet.colors = [ .systemBlue ]
+                    let barChartData = BarChartData(dataSets: [barChartDataSet])
+                    barChartData.setDrawValues(false)
+                    
+                    barChartData.barWidth = timeIntervalConfiguration.segmentTimeInterval * 0.75
+                    
+                    self.chartView.data = barChartData
+                    
+                    self.chartView.notifyDataSetChanged()
+                    
+                    self.chartView.setVisibleXRange(minXRange: timeIntervalConfiguration.pageTimeInterval, maxXRange: timeIntervalConfiguration.pageTimeInterval)
+                    self.chartView.dragEnabled = true
+                }
+            }
+
+
             
-            
-            let barChartDataSet = BarChartDataSet(entries: dataEntries, label: "Bar Chart")
-            barChartDataSet.colors = [ .systemBlue ]
-            let barChartData = BarChartData(dataSets: [barChartDataSet])
-            barChartData.setDrawValues(false)
-            
-            
-            
-            barChartData.barWidth = timeIntervalConfiguration.granularity * 0.75
-            
-            
-            
-            //            let combinedData = CombinedChartData()
-            
-            //            combinedData.barData = barChartData
-            chartView.data = barChartData
-            chartView.notifyDataSetChanged()
             
             
             let averageValue = dataPoints.averageValue
@@ -276,7 +336,7 @@ public class FredKitChartTableViewCell: UITableViewCell {
             
             timeFrameLabel.text = "\(timeIntervalConfiguration.startDate.humanReadableDateString) – \(timeIntervalConfiguration.endDate.humanReadableDateString)"
             
-            if timeIntervalConfiguration.timeInterval == .year {
+            if timeIntervalConfiguration.chartTimeInterval == .year {
                 timeIntervalLabel.text = "MONTHLY AVERAGE"
             } else {
                 timeIntervalLabel.text = "DAILY AVERAGE"
@@ -292,10 +352,7 @@ public class FredKitChartTableViewCell: UITableViewCell {
     public override func awakeFromNib() {
         super.awakeFromNib()
         
-        
-        leftButton.setTitle("", for: .normal)
-        rightButton.setTitle("", for: .normal)
-        
+
         
         
         
@@ -333,16 +390,30 @@ public class FredKitChartTableViewCell: UITableViewCell {
         filterBackground.layer.masksToBounds = true
         filterBackground.layer.cornerRadius = filterBackground.frame.height / 2
         
-        dateSelectionBackgroundView.layer.masksToBounds = true
-        dateSelectionBackgroundView.layer.cornerRadius = dateSelectionBackgroundView.frame.height / 2
-        
         //        rightButton.layer.masksToBounds = true
         //        rightButton.layer.cornerRadius = rightButton.frame.height / 2
     }
 }
 
 extension FredKitChartTableViewCell: ChartViewDelegate {
+    public func chartTranslated(_ chartView: ChartViewBase, dX: CGFloat, dY: CGFloat) {
+        if #available(iOS 10.0, *) {
+            timeFrameLabel.text = self.chartView.dateInterval.humanReadableDateInterval(shouldContainDay: true)
+        }
+    }
     
+    public func chartViewDidEndPanning(_ chartView: ChartViewBase) {
+        print("END PANNING")
+    }
+}
+
+extension BarChartView {
+    @available(iOS 10.0, *)
+    var dateInterval: NSDateInterval {
+        let pageStartDate = Date(timeIntervalSince1970: self.lowestVisibleX)
+        let pageEndDate = Date(timeIntervalSince1970: self.highestVisibleX)
+        return NSDateInterval(start: pageStartDate, end: pageEndDate)
+    }
 }
 
 #endif
