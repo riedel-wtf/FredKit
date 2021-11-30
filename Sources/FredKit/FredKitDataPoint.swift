@@ -77,8 +77,59 @@ protocol FredKitJSONDataPoint: FredKitDataPoint, FredKitJSONObject {
     
 }
 
-public enum AccumulationType {
+public protocol AccumulationType {
+    func accumulate(dataPoints: [FredKitDataPoint]) -> Double
+    var rangeTitle: String { get }
+}
+
+public enum DefaultAccumulationType: AccumulationType {
     case min, max, sum, average, count
+    
+    public func accumulate(dataPoints: [FredKitDataPoint]) -> Double {
+        switch self {
+        case .min:
+            return dataPoints.minimumValue
+        case .max:
+            return dataPoints.maximumValue
+        case .sum:
+            return dataPoints.sum
+        case .average:
+            return dataPoints.average
+        case .count:
+            return Double(dataPoints.count)
+        }
+    }
+    
+    public var rangeTitle: String {
+        switch self {
+        case .min:
+            return "MINIMUM IN RANGE"
+        case .max:
+            return "MAXIMUM IN RANGE"
+        case .sum:
+            return "TOTAL IN RANGE"
+        case .average:
+            return "AVERAGE IN RANGE"
+        case .count:
+            return "TOTAL # IN RANGE"
+        }
+    }
+}
+
+public struct CustomAccumulationType: AccumulationType {
+    
+    public init(customAccumulationCallback: @escaping ([FredKitDataPoint]) -> Double, rangeTitle: String) {
+        self.customAccumulationCallback = customAccumulationCallback
+        self.rangeTitle = rangeTitle
+    }
+    
+    let customAccumulationCallback: ([FredKitDataPoint]) -> Double
+    public var rangeTitle: String
+    
+    
+    public func accumulate(dataPoints: [FredKitDataPoint]) -> Double {
+        return customAccumulationCallback(dataPoints)
+    }
 }
 
 public extension Array where Element == FredKitDataPoint {
@@ -259,18 +310,7 @@ public extension Array where Element == FredKitDataPoint {
     }
     
     func accumulated(for accumulationType: AccumulationType) -> Double {
-        switch accumulationType {
-        case .min:
-            return self.minimumValue
-        case .max:
-            return self.maximumValue
-        case .sum:
-            return self.sum
-        case .average:
-            return self.average
-        case .count:
-            return Double(self.count)
-        }
+        return accumulationType.accumulate(dataPoints: self)
     }
     
     #if canImport(Charts)

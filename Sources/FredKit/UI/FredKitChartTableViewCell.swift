@@ -122,7 +122,7 @@ public struct FredKitChartConfiguration {
     var accumulationType: AccumulationType
     let chartTitle: String
     let availableFilterOptions: [String]
-    let dataPointFilter: (String?) -> [FredKitDataPoint]
+    let dataPointFilter: ((String?) -> [FredKitDataPoint])?
     var localizedValueFormatter: (Double) -> String
     let chartType: ChartType
     
@@ -144,7 +144,11 @@ public struct FredKitChartConfiguration {
         return totalTimeInterval / Double(totalNumberOfSegments)
     }
     
-    public init(chartTitle: String, dataPoints: [FredKitDataPoint], availableFilterOptions: [String], chartTimeInterval: ChartTimeInterval, chartType: ChartType, accumulationType: AccumulationType, localizedValueFormatter: @escaping (Double) -> String, dataPointFilter: @escaping (String?) -> [FredKitDataPoint]) {
+    var isFilteringAvailable: Bool {
+        return availableFilterOptions.count > 0 && dataPointFilter != nil
+    }
+    
+    public init(chartTitle: String, dataPoints: [FredKitDataPoint], availableFilterOptions: [String] = [], chartTimeInterval: ChartTimeInterval, chartType: ChartType, accumulationType: AccumulationType, localizedValueFormatter: @escaping (Double) -> String, dataPointFilter: ((String?) -> [FredKitDataPoint])? ) {
         self.dataPoints = dataPoints
         self.availableFilterOptions = availableFilterOptions
         self.dataPointFilter = dataPointFilter
@@ -158,7 +162,7 @@ public struct FredKitChartConfiguration {
         case .timeline:
             self.startDate = chartTimeInterval.startDate(for: dataPoints.startDate)
         }
-
+        
         self.localizedValueFormatter = localizedValueFormatter
         self.accumulationType = accumulationType
         self.chartType = chartType
@@ -222,10 +226,10 @@ public class FredKitChartTableViewCell: UITableViewCell {
         didSet {
             if let timeIntervalConfiguration = self.timeIntervalConfiguration {
                 if let currentlyActiveFilterOption = currentlyActiveFilterOption {
-                    self.timeIntervalConfiguration?.dataPoints = timeIntervalConfiguration.dataPointFilter(currentlyActiveFilterOption)
+                    self.timeIntervalConfiguration?.dataPoints = timeIntervalConfiguration.dataPointFilter!(currentlyActiveFilterOption)
                     self.filterbutton.setTitle(currentlyActiveFilterOption, for: .normal)
                 } else {
-                    self.timeIntervalConfiguration?.dataPoints = timeIntervalConfiguration.dataPointFilter(nil)
+                    self.timeIntervalConfiguration?.dataPoints = timeIntervalConfiguration.dataPointFilter!(nil)
                     self.filterbutton.setTitle("Filter", for: .normal)
                 }
                 self.refreshChart()
@@ -275,7 +279,7 @@ public class FredKitChartTableViewCell: UITableViewCell {
             
             if #available(iOS 14.0, *) {
                 
-                if timeIntervalConfiguration.availableFilterOptions.isEmpty {
+                if !timeIntervalConfiguration.isFilteringAvailable {
                     filterBackground.isHidden = true
                 } else {
                     filterBackground.isHidden = false
@@ -293,7 +297,7 @@ public class FredKitChartTableViewCell: UITableViewCell {
                             self.currentlyActiveFilterOption = filterOption
                         })
                     })
-
+                    
                     menuElements.append(contentsOf: filterOptionActions)
                     
                     filterbutton.menu = UIMenu(title: "Available Filter Options", image: nil, identifier: nil, options: [], children: menuElements)
@@ -426,18 +430,9 @@ public class FredKitChartTableViewCell: UITableViewCell {
             
             timeFrameLabel.text = "\(timeIntervalConfiguration.startDate.humanReadableDateString) – \(timeIntervalConfiguration.endDate.humanReadableDateString)"
             
-            switch timeIntervalConfiguration.accumulationType {
-            case .min:
-                timeIntervalLabel.text = "MINIMUM IN RANGE"
-            case .max:
-                timeIntervalLabel.text = "MAXIMUM IN RANGE"
-            case .sum:
-                timeIntervalLabel.text = "TOTAL IN RANGE"
-            case .average:
-                timeIntervalLabel.text = "AVERAGE IN RANGE"
-            case .count:
-                timeIntervalLabel.text = "TOTAL # IN RANGE"
-            }
+            
+            timeIntervalLabel.text = timeIntervalConfiguration.accumulationType.rangeTitle
+            
             
         }
     }
@@ -476,11 +471,11 @@ public class FredKitChartTableViewCell: UITableViewCell {
                 let visibleDataPoints = accumulatedDataPoints.filteredDataPoints(for: visibleDateInterval)
                 let maximum = visibleDataPoints.maximumValue
                 
-//                UIView.animate(withDuration: 0.25) {
-//                    self.chartView.setVisibleYRangeMaximum(maximum, axis: .right)
-//                    self.chartView.setVisibleYRangeMinimum(maximum, axis: .right)
-//                    self.chartView.moveViewTo(xValue: self.chartView.lowestVisibleX, yValue: 0, axis: .right)
-//                }
+                //                UIView.animate(withDuration: 0.25) {
+                //                    self.chartView.setVisibleYRangeMaximum(maximum, axis: .right)
+                //                    self.chartView.setVisibleYRangeMinimum(maximum, axis: .right)
+                //                    self.chartView.moveViewTo(xValue: self.chartView.lowestVisibleX, yValue: 0, axis: .right)
+                //                }
             }
         }
     }
@@ -533,7 +528,7 @@ extension FredKitChartTableViewCell: ChartViewDelegate {
     }
     
     public func chartViewDidEndPanning(_ chartView: ChartViewBase) {
-
+        
     }
     
     public func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
