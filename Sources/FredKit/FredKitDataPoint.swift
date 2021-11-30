@@ -158,12 +158,11 @@ public extension Array where Element == FredKitDataPoint {
     }
     
     var average: Double {
-        
         if count == 0 {
             return 0.0
         }
         
-        sum / Double(count)
+        return sum / Double(count)
     }
     
     var maximumDatapoint: Element? {
