@@ -186,11 +186,17 @@ public extension Date {
 
 
 @available(iOS 10.0, *)
-extension NSDateInterval {
+extension DateInterval {
     func humanReadableDateInterval(shouldContainDay: Bool) -> String {
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
-        return formatter.string(from: startDate, to: endDate)
+        return formatter.string(from: start, to: end)
+    }
+    
+    var middle: Date {
+        let startUnixTime = self.start.timeIntervalSince1970
+        let endUnixTime = self.end.timeIntervalSince1970
+        return Date(timeIntervalSince1970: (startUnixTime + endUnixTime) / 2)
     }
 }

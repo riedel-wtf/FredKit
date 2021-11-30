@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
@@ -27,6 +26,7 @@
                             <segment title="M"/>
                             <segment title="6M"/>
                             <segment title="Y"/>
+                            <segment title="D"/>
                         </segments>
                         <connections>
                             <action selector="didChangeTimeInterval:" destination="KGk-i7-Jjw" eventType="valueChanged" id="fkV-TR-Lbv"/>
@@ -78,11 +78,11 @@
                                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5xP-yz-nMb">
                                                 <rect key="frame" x="50.5" y="0.0" width="99.5" height="30"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="1z4-L6-ZJG">
-                                                    <rect key="frame" x="0.0" y="0.0" width="99.5" height="30"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="99" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Z8-Q4-Psh">
-                                                            <rect key="frame" x="6" y="6" width="87.5" height="18"/>
+                                                            <rect key="frame" x="6" y="6" width="88" height="18"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="18" id="rVA-4R-dUV"/>
                                                             </constraints>
@@ -138,6 +138,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="bigValueLabel" destination="5by-Ci-OiO" id="bi8-li-n1u"/>
+                <outlet property="chartSubtitleLabel" destination="Q5C-gZ-uDk" id="rnM-P5-bLP"/>
                 <outlet property="chartView" destination="RD4-sP-4o5" id="GFN-lg-5BK"/>
                 <outlet property="filterBackground" destination="5xP-yz-nMb" id="7Vl-Ru-eJY"/>
                 <outlet property="filterbutton" destination="5Z8-Q4-Psh" id="2z3-yF-WnB"/>
