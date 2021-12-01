@@ -57,7 +57,7 @@ public extension String {
 
 // https://gist.github.com/RuiCarneiro/82bf91214e3e09222233b1fc04139c86
 public extension String {
-    public func levenshtein(_ other: String) -> Int {
+    func levenshtein(_ other: String) -> Int {
         let sCount = self.count
         let oCount = other.count
         
