@@ -416,9 +416,9 @@ public class FredKitChartTableViewCell: UITableViewCell {
                         self.chartView.setVisibleXRange(minXRange: timeIntervalConfiguration.pageTimeInterval, maxXRange: timeIntervalConfiguration.pageTimeInterval)
                         self.chartView.dragYEnabled = false
                         self.chartView.dragXEnabled = true
+                        self.chartView.moveViewTo(xValue: self.chartView.chartXMax, yValue: 0, axis: .right)
                         self.refreshValuesForCurrentChartRange()
                         self.refreshYAxisForCurrentlyVisibleData()
-                        self.chartView.moveViewTo(xValue: self.chartView.chartXMax, yValue: 0, axis: .right)
                     }
                 }
             }
