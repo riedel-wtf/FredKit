@@ -9,9 +9,9 @@ import UIKit
 
 public class FredKitSimpleDetailDisclosureTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var iconView: UIImageView!
-    @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var backgroundColorView: UIView!
+    @IBOutlet public weak var iconView: UIImageView!
+    @IBOutlet public weak var title: UILabel!
+    @IBOutlet public weak var backgroundColorView: UIView!
     
     
     public override func awakeFromNib() {
