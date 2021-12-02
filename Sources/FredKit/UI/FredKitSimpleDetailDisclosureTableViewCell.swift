@@ -13,6 +13,9 @@ public class FredKitSimpleDetailDisclosureTableViewCell: UITableViewCell {
     @IBOutlet public weak var title: UILabel!
     @IBOutlet public weak var backgroundColorView: UIView!
     
+    public static var nib: UINib {
+        return UINib(nibName: "FredKitSimpleDetailDisclosureTableViewCell", bundle: Bundle.module)
+    }
     
     public override func awakeFromNib() {
         super.awakeFromNib()
