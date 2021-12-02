@@ -12,6 +12,12 @@ public class FredKitSimpleDetailDisclosureTableViewCell: UITableViewCell {
     @IBOutlet public weak var iconView: UIImageView!
     @IBOutlet public weak var title: UILabel!
     @IBOutlet public weak var backgroundColorView: UIView!
+    @IBOutlet weak var backgroundViewIncludingImageView: UIView!
+    
+    
+    public func hideImageView() {
+        self.backgroundViewIncludingImageView.isHidden = true
+    }
     
     public static var nib: UINib {
         return UINib(nibName: "FredKitSimpleDetailDisclosureTableViewCell", bundle: Bundle.module)
@@ -32,7 +38,7 @@ public class FredKitSimpleDetailDisclosureTableViewCell: UITableViewCell {
     
     public override func prepareForReuse() {
         super.prepareForReuse()
-        backgroundColorView.isHidden = false
+        backgroundViewIncludingImageView.isHidden = false
     }
     
 }

@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -44,7 +43,7 @@
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="50n-2A-XOp" firstAttribute="top" relation="greaterThanOrEqual" secondItem="mIZ-Ey-gTe" secondAttribute="top" id="9Qr-46-0BK"/>
                                     <constraint firstItem="50n-2A-XOp" firstAttribute="leading" secondItem="mIZ-Ey-gTe" secondAttribute="leading" id="Huo-i3-NU2"/>
@@ -71,6 +70,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="backgroundColorView" destination="50n-2A-XOp" id="euJ-ZS-ygP"/>
+                <outlet property="backgroundViewIncludingImageView" destination="mIZ-Ey-gTe" id="zrr-Fy-ea7"/>
                 <outlet property="iconView" destination="fdj-kn-eXJ" id="hjK-kG-RPe"/>
                 <outlet property="title" destination="fzg-Dj-byx" id="nsw-Rs-s6x"/>
             </connections>
@@ -79,8 +79,5 @@
     </objects>
     <resources>
         <image name="link" catalog="system" width="128" height="122"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>
