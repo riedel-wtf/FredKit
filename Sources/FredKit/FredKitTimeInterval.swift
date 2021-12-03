@@ -84,6 +84,14 @@ public extension TimeInterval {
         timeIntervalInSeconds -= numberOfMinutes * Int(TimeInterval.minute)
         let numberOfSeconds = Int(timeIntervalInSeconds)
         
+        if numberOfHours == 0 && numberOfSeconds == 0 {
+            return String(format: "%d min", numberOfMinutes)
+        }
+        
+        if numberOfHours == 0 {
+            return String(format: "%0.2d:%0.2d min", numberOfMinutes, numberOfSeconds)
+        }
+        
         if numberOfSeconds == 0 {
             return String(format: "%0.2d:%0.2d \(FredKitLocalizedString(string: "hrs", bundle: Bundle.module))",numberOfHours,numberOfMinutes)
         }
