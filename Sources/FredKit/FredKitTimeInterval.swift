@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import StoreKit
 
 public extension TimeInterval {
     static let nanosecond = TimeInterval.millisecond / 1000.0
@@ -130,5 +131,31 @@ public extension TimeInterval {
             
             return timeIntervalString
         }
+    }
+    
+    @available(iOS 11.2, *)
+    func localizedString(for storeKitPeriod: SKProductSubscriptionPeriod) -> String {
+        let isPlural = !(storeKitPeriod.numberOfUnits == 1)
+        
+        var periodType = "–"
+        
+        switch storeKitPeriod.unit {
+        case .day:
+            periodType = isPlural ? FredKitLocalizedString(string:"days", bundle: Bundle.module) : FredKitLocalizedString(string:"day", bundle: Bundle.module)
+        case .week:
+            periodType = isPlural ? FredKitLocalizedString(string:"weeks", bundle: Bundle.module) : FredKitLocalizedString(string:"week", bundle: Bundle.module)
+        case .month:
+            periodType = isPlural ? FredKitLocalizedString(string:"months", bundle: Bundle.module) : FredKitLocalizedString(string:"month", bundle: Bundle.module)
+        case .year:
+            periodType = isPlural ? FredKitLocalizedString(string:"years", bundle: Bundle.module) : FredKitLocalizedString(string:"year", bundle: Bundle.module)
+        @unknown default:
+            periodType = "Unknown"
+        }
+        
+        if !isPlural {
+            return periodType
+        }
+        
+        return "\(storeKitPeriod.numberOfUnits) \(periodType)"
     }
 }
