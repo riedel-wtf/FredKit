@@ -134,7 +134,7 @@ public extension TimeInterval {
     }
     
     @available(iOS 11.2, *)
-    func localizedString(for storeKitPeriod: SKProductSubscriptionPeriod) -> String {
+    static func localizedString(for storeKitPeriod: SKProductSubscriptionPeriod) -> String {
         let isPlural = !(storeKitPeriod.numberOfUnits == 1)
         
         var periodType = "–"
