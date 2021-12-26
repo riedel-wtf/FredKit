@@ -5,18 +5,25 @@
 //  Created by Frederik Riedel on 1/22/18.
 //  Copyright © 2018 Frederik Riedel. All rights reserved.
 //
-
+#if os(iOS)
 import Foundation
 import UIKit
 
 public struct LocalizedValue {
+    
+    public init(value: String, unit: String) {
+        self.value = value
+        self.unit = unit
+    }
+    
     var value: String
     var unit: String
     
-    func attributedString(ofSize fontSize: Double, weight: UIFont.Weight) -> NSAttributedString {
+    public func attributedString(ofSize fontSize: Double, weight: UIFont.Weight) -> NSAttributedString {
         return StringUnitFormatter.formattedString(fromString: value, fontSize: fontSize, unit: unit, fontWeight: weight)
     }
 }
+
 
 public enum UnitSystem: String {
     case metric, imperial
@@ -116,3 +123,4 @@ extension Double {
         return LocalizedUnitConverter.sharedConverter.convertToLocalizedUnit(value: self, from: .meters)
     }
 }
+#endif

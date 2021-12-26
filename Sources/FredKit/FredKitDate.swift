@@ -185,16 +185,16 @@ public extension Date {
 }
 
 
-@available(iOS 10.0, *)
+@available(iOS 10.0, macOS 10.12, *)
 extension DateInterval {
-    func humanReadableDateInterval(shouldContainDay: Bool) -> String {
+    public func humanReadableDateInterval(shouldContainDay: Bool) -> String {
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
         return formatter.string(from: start, to: end)
     }
     
-    var middle: Date {
+    public var middle: Date {
         let startUnixTime = self.start.timeIntervalSince1970
         let endUnixTime = self.end.timeIntervalSince1970
         return Date(timeIntervalSince1970: (startUnixTime + endUnixTime) / 2)
