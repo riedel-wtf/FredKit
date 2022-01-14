@@ -27,7 +27,7 @@ public extension TimeInterval {
     
     
     var humanReadableTimeInterval: String {
-        if self < 5 * TimeInterval.day && self > TimeInterval.second {
+        if self < 3 * TimeInterval.day && self > TimeInterval.second {
             return self.simpleTimeIntervalString
         }
         
@@ -84,6 +84,10 @@ public extension TimeInterval {
         let numberOfMinutes = Int(Double(timeIntervalInSeconds) / TimeInterval.minute)
         timeIntervalInSeconds -= numberOfMinutes * Int(TimeInterval.minute)
         let numberOfSeconds = Int(timeIntervalInSeconds)
+        
+        if numberOfHours == 0 && numberOfMinutes == 0 {
+            return String(format: "%d s", numberOfSeconds)
+        }
         
         if numberOfHours == 0 && numberOfSeconds == 0 {
             return String(format: "%d min", numberOfMinutes)
