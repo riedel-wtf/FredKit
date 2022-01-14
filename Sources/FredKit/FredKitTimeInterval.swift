@@ -31,7 +31,7 @@ public extension TimeInterval {
             return self.simpleTimeIntervalString
         }
         
-        return self.humanReadableTimeInterval(fillRemainingTimeWithSmallerUnitsIfFeasable: true)
+        return self.humanReadableTimeInterval(fillRemainingTimeWithSmallerUnitsIfFeasable: false)
     }
     
     private var localizedUnitForTimeInterval: String {
@@ -86,7 +86,7 @@ public extension TimeInterval {
         let numberOfSeconds = Int(timeIntervalInSeconds)
         
         if numberOfHours == 0 && numberOfMinutes == 0 {
-            return String(format: "%d s", numberOfSeconds)
+            return String(format: "%ds", numberOfSeconds)
         }
         
         if numberOfHours == 0 && numberOfSeconds == 0 {
