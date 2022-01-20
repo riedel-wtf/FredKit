@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol FredKitJSONObject {
+public protocol FredKitJSONObject {
     init(withJson json: [String: Any])
     var json: [String: Any] { get }
 }
