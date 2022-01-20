@@ -298,3 +298,19 @@ extension NSDictionary {
     }
 }
 
+public extension Array where Element: FredKitJSONDataPoint {
+    var jsonArray: [ [String: Any] ] {
+        return self.map { (dataPoint) -> [String: Any] in
+            return dataPoint.json
+        }
+    }
+}
+
+public extension Array where Element == [ String: Any ] {
+    
+    func generateDataPointsArray<T: FredKitJSONDataPoint>() -> [T] {
+        return self.compactMap { (json) -> T? in
+            return T(withJson: json)
+        }
+    }
+}
