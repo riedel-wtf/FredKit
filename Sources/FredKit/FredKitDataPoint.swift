@@ -70,7 +70,7 @@ public class FredKitSimpleDataPoint: FredKitDataPoint {
     }
 }
 
-protocol FredKitJSONDataPoint: FredKitDataPoint, FredKitJSONObject {
+public protocol FredKitJSONDataPoint: FredKitDataPoint, FredKitJSONObject {
     
 }
 
@@ -298,10 +298,3 @@ extension NSDictionary {
     }
 }
 
-extension Int {
-    func mod (divideBy: Int) -> Int {
-        if self >= 0 { return self % divideBy }
-        if self >= -divideBy { return (self+divideBy) }
-        return ((self % divideBy)+divideBy)%divideBy
-    }
-}
