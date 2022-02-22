@@ -34,6 +34,34 @@ public extension TimeInterval {
         return self.humanReadableTimeInterval(fillRemainingTimeWithSmallerUnitsIfFeasable: false)
     }
     
+    var veryShortHumanReadableTimeInterval: String {
+        if Int(self) % Int(TimeInterval.day) == 0 {
+            return self.humanReadableTimeInterval(fillRemainingTimeWithSmallerUnitsIfFeasable: false)
+        }
+        
+        var timeIntervalInSeconds = Int(self)
+        let numberOfHours = Int(Double(timeIntervalInSeconds) / TimeInterval.hour)
+        timeIntervalInSeconds -= numberOfHours * Int(TimeInterval.hour)
+        let numberOfMinutes = Int(Double(timeIntervalInSeconds) / TimeInterval.minute)
+        timeIntervalInSeconds -= numberOfMinutes * Int(TimeInterval.minute)
+        let numberOfSeconds = Int(timeIntervalInSeconds)
+        
+        if numberOfHours == 0 && numberOfMinutes == 0 {
+            return String(format: "%ds", numberOfSeconds)
+        }
+        
+        if numberOfHours == 0 && numberOfSeconds == 0 {
+            return String(format: "%d min", numberOfMinutes)
+        }
+        
+        if numberOfHours == 0 {
+            return String(format: "%0.2d min", numberOfMinutes)
+        }
+        
+        
+        return String(format: "%0.2d \(FredKitLocalizedString(string: "hrs", bundle: Bundle.module))",numberOfHours)
+    }
+    
     private var localizedUnitForTimeInterval: String {
         if self > .year {
             return FredKitLocalizedString(string: "years", bundle: Bundle.module)
