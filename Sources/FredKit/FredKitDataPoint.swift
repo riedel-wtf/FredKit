@@ -100,15 +100,15 @@ public enum DefaultAccumulationType: AccumulationType {
     public var rangeTitle: String {
         switch self {
         case .min:
-            return "MINIMUM IN RANGE"
+            return NSLocalizedString("MINIMUM IN RANGE")
         case .max:
-            return "MAXIMUM IN RANGE"
+            return NSLocalizedString("MAXIMUM IN RANGE")
         case .sum:
-            return "TOTAL IN RANGE"
+            return NSLocalizedString("TOTAL IN RANGE")
         case .average:
-            return "AVERAGE IN RANGE"
+            return NSLocalizedString("AVERAGE IN RANGE")
         case .count:
-            return "TOTAL # IN RANGE"
+            return NSLocalizedString("TOTAL # IN RANGE")
         }
     }
 }
@@ -117,7 +117,7 @@ public struct CustomAccumulationType: AccumulationType {
     
     public init(customAccumulationCallback: @escaping ([FredKitDataPoint]) -> Double, rangeTitle: String) {
         self.customAccumulationCallback = customAccumulationCallback
-        self.rangeTitle = rangeTitle
+        self.rangeTitle = rangeTitle.uppercased()
     }
     
     let customAccumulationCallback: ([FredKitDataPoint]) -> Double

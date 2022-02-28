@@ -10,3 +10,10 @@
 "days" = "Tage";
 "weeks" = "Wochen";
 "week" = "Woche";
+
+"TOTAL # IN RANGE" = "Gesamtzahl im Intervall";
+"AVERAGE IN RANGE" = "Durchschnitt im Intervall";
+"TOTAL IN RANGE" = "Gesamt im Intervall";
+"MAXIMUM IN RANGE" = "Maximum im Intervall";
+"MINIMUM IN RANGE" = "Minimum im Intervall";
+
