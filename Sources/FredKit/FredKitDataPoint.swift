@@ -100,15 +100,15 @@ public enum DefaultAccumulationType: AccumulationType {
     public var rangeTitle: String {
         switch self {
         case .min:
-            return NSLocalizedString("MINIMUM IN RANGE")
+            return FredKitLocalizedString(string: "MINIMUM IN RANGE", bundle: Bundle.module)
         case .max:
-            return NSLocalizedString("MAXIMUM IN RANGE")
+            return FredKitLocalizedString(string: "MAXIMUM IN RANGE", bundle: Bundle.module)
         case .sum:
-            return NSLocalizedString("TOTAL IN RANGE")
+            return FredKitLocalizedString(string: "TOTAL IN RANGE", bundle: Bundle.module)
         case .average:
-            return NSLocalizedString("AVERAGE IN RANGE")
+            return FredKitLocalizedString(string: "AVERAGE IN RANGE", bundle: Bundle.module)
         case .count:
-            return NSLocalizedString("TOTAL # IN RANGE")
+            return FredKitLocalizedString(string: "TOTAL # IN RANGE", bundle: Bundle.module)
         }
     }
 }
