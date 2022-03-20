@@ -9,6 +9,7 @@
 import Foundation
 import StoreKit
 
+
 public extension TimeInterval {
     static let nanosecond = TimeInterval.millisecond / 1000.0
     static let millisecond = TimeInterval.second / 1000.0
@@ -24,7 +25,30 @@ public extension TimeInterval {
     static let millenium = TimeInterval.year * 1000.0
     
     
-    
+    var localizedValue: LocalizedValue {
+        let availableTimeIntervalOptions = [TimeInterval.year, .month, .week, .day, .hour, .minute, .second, .millisecond, .nanosecond]
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.maximumFractionDigits = 1
+        
+        let biggestTimeIntervalOption = availableTimeIntervalOptions.first { timeIntervalOption in
+            return self >= timeIntervalOption
+        }
+        
+        guard let biggestTimeIntervalOption = biggestTimeIntervalOption else {
+            return LocalizedValue(value: "0", unit: "s")
+        }
+        
+        let amountOfTimeinterval = NSNumber(value: self / biggestTimeIntervalOption)
+        
+        if amountOfTimeinterval.doubleValue >= 5 || amountOfTimeinterval.doubleValue == Double(amountOfTimeinterval.intValue) || self < .second {
+            return LocalizedValue(value: numberFormatter.string(from: amountOfTimeinterval)!, unit: self.localizedUnitForTimeInterval)
+        } else {
+            let fullAmountOfTimeIntervalOption = amountOfTimeinterval.intValue
+            let representedTimeInterval = (Double(fullAmountOfTimeIntervalOption) * biggestTimeIntervalOption)
+            return LocalizedValue(value: "\(fullAmountOfTimeIntervalOption)", unit: representedTimeInterval.localizedUnitForTimeInterval)
+        }
+    }
     
     var humanReadableTimeInterval: String {
         if self < 3 * TimeInterval.day && self > TimeInterval.second {
@@ -132,9 +156,6 @@ public extension TimeInterval {
     }
     
     private func humanReadableTimeInterval(fillRemainingTimeWithSmallerUnitsIfFeasable: Bool) -> String {
-        
-        
-        
         let availableTimeIntervalOptions = [TimeInterval.year, .month, .week, .day, .hour, .minute, .second, .millisecond, .nanosecond]
         
         let numberFormatter = NumberFormatter()
@@ -145,7 +166,7 @@ public extension TimeInterval {
         }
         
         guard let biggestTimeIntervalOption = biggestTimeIntervalOption else {
-            return "0"
+            return "0s"
         }
         
         let amountOfTimeinterval = NSNumber(value: self / biggestTimeIntervalOption)
