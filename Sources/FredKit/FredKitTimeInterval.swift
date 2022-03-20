@@ -41,7 +41,7 @@ public extension TimeInterval {
         
         let amountOfTimeinterval = NSNumber(value: self / biggestTimeIntervalOption)
         
-        if amountOfTimeinterval.doubleValue >= 5 || amountOfTimeinterval.doubleValue == Double(amountOfTimeinterval.intValue) || self < .second {
+        if amountOfTimeinterval.doubleValue >= 5 || amountOfTimeinterval.doubleValue == Double(amountOfTimeinterval.intValue) || self < .second || self > .day {
             return LocalizedValue(value: numberFormatter.string(from: amountOfTimeinterval)!, unit: self.localizedUnitForTimeInterval)
         } else {
             let fullAmountOfTimeIntervalOption = amountOfTimeinterval.intValue
