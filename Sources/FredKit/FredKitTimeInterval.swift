@@ -24,7 +24,7 @@ public extension TimeInterval {
     static let century = TimeInterval.year * 100.0
     static let millenium = TimeInterval.year * 1000.0
     
-    
+#if os(iOS)
     var localizedValue: LocalizedValue {
         let availableTimeIntervalOptions = [TimeInterval.year, .month, .week, .day, .hour, .minute, .second, .millisecond, .nanosecond]
         
@@ -49,6 +49,7 @@ public extension TimeInterval {
             return LocalizedValue(value: "\(fullAmountOfTimeIntervalOption)", unit: representedTimeInterval.localizedUnitForTimeInterval)
         }
     }
+#endif
     
     var humanReadableTimeInterval: String {
         if self < 3 * TimeInterval.day && self > TimeInterval.second {
