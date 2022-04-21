@@ -185,7 +185,7 @@ public extension Date {
 }
 
 
-@available(iOS 10.0, macOS 10.12, *)
+@available(iOS 10.0, macOS 10.12, watchOS 3.0, *)
 extension DateInterval {
     public func humanReadableDateInterval(shouldContainDay: Bool) -> String {
         let formatter = DateIntervalFormatter()

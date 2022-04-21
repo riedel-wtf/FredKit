@@ -12,7 +12,7 @@ public protocol FredKitJSONObject {
     var json: [String: Any] { get }
 }
 
-@available(iOS 11.0, macOS 10.13, *)
+@available(iOS 11.0, macOS 10.13, watchOS 4.0, *)
 extension FredKitJSONObject {
     init?(withFileURL url: URL) {
         if url.pathExtension == "plist" {
@@ -223,7 +223,7 @@ public extension Array where Element == FredKitDataPoint {
         self = prefix + dataPoints + suffix
     }
     
-    @available(iOS 10.0, macOS 10.12, *)
+    @available(iOS 10.0, macOS 10.12, watchOS 3.0, *)
     func filteredDataPoints(for dateInterval: DateInterval) -> [Element] {
         return self.filter({ (element) -> Bool in
             return element.timeStamp >= dateInterval.start && element.timeStamp <= dateInterval.end
