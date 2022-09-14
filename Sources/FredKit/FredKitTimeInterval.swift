@@ -59,7 +59,7 @@ public extension TimeInterval {
         return self.humanReadableTimeInterval(fillRemainingTimeWithSmallerUnitsIfFeasable: false)
     }
     
-    var veryShortHumanReadableTimeInterval: String {
+    func veryShortHumanReadableTimeInterval(leadingZeros: Bool) -> String {
         if Int(self) % Int(TimeInterval.day) == 0 {
             return self.humanReadableTimeInterval(fillRemainingTimeWithSmallerUnitsIfFeasable: false)
         }
@@ -79,12 +79,19 @@ public extension TimeInterval {
             return String(format: "%d min", numberOfMinutes)
         }
         
-        if numberOfHours == 0 {
-            return String(format: "%0.2d min", numberOfMinutes)
+        if leadingZeros {
+            if numberOfHours == 0 {
+                return String(format: "%0.2d min", numberOfMinutes)
+            }
+            
+            return String(format: "%0.2d \(FredKitLocalizedString(string: "hrs", bundle: Bundle.module))", numberOfHours)
         }
         
+        if numberOfHours == 0 {
+            return String(format: "%d min", numberOfMinutes)
+        }
         
-        return String(format: "%0.2d \(FredKitLocalizedString(string: "hrs", bundle: Bundle.module))",numberOfHours)
+        return String(format: "%d \(FredKitLocalizedString(string: "hrs", bundle: Bundle.module))", numberOfHours)
     }
     
     private var localizedUnitForTimeInterval: String {
