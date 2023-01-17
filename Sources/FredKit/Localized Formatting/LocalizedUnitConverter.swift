@@ -16,8 +16,8 @@ public struct LocalizedValue {
         self.unit = unit
     }
     
-    var value: String
-    var unit: String
+    public var value: String
+    public var unit: String
     
     public func attributedString(ofSize fontSize: Double, weight: UIFont.Weight) -> NSAttributedString {
         return StringUnitFormatter.formattedString(fromString: value, fontSize: fontSize, unit: unit, fontWeight: weight)
