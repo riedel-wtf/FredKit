@@ -49,6 +49,27 @@ public extension TimeInterval {
             return LocalizedValue(value: "\(fullAmountOfTimeIntervalOption)", unit: representedTimeInterval.localizedUnitForTimeInterval)
         }
     }
+    
+    var localizedComponents: [LocalizedValue] {
+        
+        var localizedComponents = [LocalizedValue]()
+        
+        var timeIntervalInSeconds = Int(self)
+        let numberOfHours = Int(Double(timeIntervalInSeconds) / TimeInterval.hour)
+        timeIntervalInSeconds -= numberOfHours * Int(TimeInterval.hour)
+        let numberOfMinutes = Int(Double(timeIntervalInSeconds) / TimeInterval.minute)
+        
+        if numberOfHours > 0 {
+            localizedComponents.append(LocalizedValue(value: "\(numberOfHours)", unit: FredKitLocalizedString(string: numberOfHours == 1 ? "hr" : "hrs", bundle: Bundle.module)))
+        }
+        
+        if numberOfMinutes > 0 {
+            localizedComponents.append(LocalizedValue(value: "\(numberOfMinutes)", unit: FredKitLocalizedString(string: numberOfMinutes == 1 ? "min" : "mins", bundle: Bundle.module)))
+        }
+        
+        
+        return localizedComponents
+    }
 #endif
     
     var humanReadableTimeInterval: String {
