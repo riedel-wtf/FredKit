@@ -9,6 +9,7 @@
 #if os(iOS)
 import Foundation
 import UIKit
+import SwiftUI
 
 public extension UIColor {
     var brightness: CGFloat {
@@ -65,4 +66,66 @@ public extension UIColor {
 
     
 }
+
+@available(iOS 13.0, *)
+extension Color {
+    init(hex: String) {
+        self.init(UIColor(hex: hex))
+    }
+}
+
+extension UIColor {
+    public convenience init(hex: String) {
+        var hex = hex
+        if hex.starts(with: "#") {
+            hex = String(hex.dropFirst(1))
+        }
+        
+        let r, g, b: CGFloat
+        
+        let scanner = Scanner(string: hex)
+        var hexNumber: UInt64 = 0
+        
+        if scanner.scanHexInt64(&hexNumber) {
+            r = CGFloat((hexNumber & 0xff0000) >> 16) / 255
+            g = CGFloat((hexNumber & 0x00ff00) >> 8) / 255
+            b = CGFloat((hexNumber & 0x0000ff)) / 255
+            
+            self.init(red: r, green: g, blue: b, alpha: 1.0)
+            return
+        }
+        
+        self.init(white: 1.0, alpha: 1.0)
+    }
+    
+    @available(iOS 13.0, *)
+    public var swiftUI: Color {
+        Color(self)
+    }
+}
+
+public struct LocalizedColor {
+    public static var checkMarkColor: UIColor {
+        if Locale.current.regionCode == "CN" {
+            return .systemRed
+        }
+        return .systemGreen
+    }
+    
+    public static var xmarkColor: UIColor {
+        if Locale.current.regionCode == "CN" {
+            return .systemGreen
+        }
+        return .systemRed
+    }
+    
+    public static var trustworthyColor: UIColor {
+        if Locale.current.regionCode == "CN" {
+            return UIColor(hex: "EA445A")
+        }
+        return .systemBlue
+    }
+}
+
+
 #endif
