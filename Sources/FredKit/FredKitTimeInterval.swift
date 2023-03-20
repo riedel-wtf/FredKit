@@ -75,6 +75,28 @@ public extension TimeInterval {
     }
 #endif
     
+    var humanReadableTimeIntervalMaximumDays: String {
+        if self < TimeInterval.hour {
+            return self.simpleTimeIntervalString
+        }
+        
+        if self < TimeInterval.day {
+            let hourCount = Int(self / TimeInterval.hour)
+            if hourCount == 1 {
+                return "1 \(FredKitLocalizedString(string: "hr", bundle: Bundle.module))"
+            }
+            
+            return "\(hourCount) \(FredKitLocalizedString(string: "hrs", bundle: Bundle.module))"
+        }
+        
+        let dayCount = Int(self / TimeInterval.day)
+        if dayCount == 1 {
+            return "1 \(FredKitLocalizedString(string: "day", bundle: Bundle.module))"
+        }
+        
+        return "\(dayCount) \(FredKitLocalizedString(string: "days", bundle: Bundle.module))"
+    }
+    
     var humanReadableTimeInterval: String {
         if self < 3 * TimeInterval.day && self > TimeInterval.second {
             return self.simpleTimeIntervalString
