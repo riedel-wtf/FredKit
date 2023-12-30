@@ -15,10 +15,10 @@ public extension Date {
         
         if calendar.isDateInToday(self) {
             // show today
-            return NSLocalizedString("Today", comment: "")
+            return FredKitLocalizedString(string: "Today", bundle: Bundle.module)
         } else if calendar.isDateInYesterday(self) {
             // yesterday
-            return NSLocalizedString("Yesterday", comment: "")
+            return FredKitLocalizedString(string: "Yesterday", bundle: Bundle.module)
         } else if self.isInCurrentWeek {
             // show weekday
             let formatterWeekday = DateFormatter()
