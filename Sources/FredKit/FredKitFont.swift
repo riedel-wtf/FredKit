@@ -6,14 +6,13 @@
 //  Copyright © 2019 Frederik Riedel. All rights reserved.
 //
 
-#if os(iOS)
 import Foundation
 import UIKit
 
 public extension UIFont {
     // Returns the rounded version of the font, if available.
     var rounded: UIFont {
-        if #available(iOS 13.0, *), #available(watchOSApplicationExtension 5.2, *) {
+        if #available(iOS 13.0, *), #available(watchOS 5.2, *), #available(watchOSApplicationExtension 5.2, *) {
             if let roundedDescriptor = fontDescriptor.withDesign(.rounded) {
                 return UIFont(descriptor: roundedDescriptor, size: pointSize)
             }
@@ -21,4 +20,3 @@ public extension UIFont {
         return self
     }
 }
-#endif

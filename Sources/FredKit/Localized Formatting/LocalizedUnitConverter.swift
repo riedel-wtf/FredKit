@@ -5,7 +5,7 @@
 //  Created by Frederik Riedel on 1/22/18.
 //  Copyright © 2018 Frederik Riedel. All rights reserved.
 //
-#if os(iOS)
+
 import Foundation
 import UIKit
 
@@ -123,4 +123,3 @@ extension Double {
         return LocalizedUnitConverter.sharedConverter.convertToLocalizedUnit(value: self, from: .meters)
     }
 }
-#endif

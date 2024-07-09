@@ -5,7 +5,7 @@
 //  Created by Frederik Riedel on 8/26/18.
 //  Copyright © 2018 Frederik Riedel. All rights reserved.
 //
-#if os(iOS)
+
 import Foundation
 import UIKit
 
@@ -36,6 +36,4 @@ struct StringUnitFormatter {
     public static func formattedString(fromString string: String, fontSize: Double, unit: String, fontWeight: UIFont.Weight) -> NSAttributedString {
         return formattedString(fromString: string, fontSize: fontSize, unit: unit, fontWeight: fontWeight, unitColor: nil)
     }
-    
 }
-#endif
