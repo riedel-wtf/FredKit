@@ -28,7 +28,10 @@ extension FredKitJSONObject {
     }
     
     func save(toFileURL url: URL) {
-        
+        if !FileManager.default.fileExists(atPath: url.absoluteString) {
+            try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        }
+
         let dict = NSDictionary(dictionary: self.json)
         dict.verifyContentsForSaving()
         
@@ -41,10 +44,9 @@ extension FredKitJSONObject {
 }
 
 extension Array where Element: FredKitJSONObject {
-    var json: [ [String: Any] ] {
-        return self.map { (dataPoint) -> [String: Any] in
-            return dataPoint.json
-        }
+    
+    public var json: [[String: Any]] {
+        self.map { $0.json }
     }
 }
 
@@ -130,40 +132,40 @@ public struct CustomAccumulationType: AccumulationType {
 }
 
 public extension Array where Element == FredKitDataPoint {
+
     var averageValue: Double {
-        return self.map { (dataPoint) -> Double in
-            return dataPoint.value
+        self.map { (dataPoint) -> Double in
+            dataPoint.value
         }.average
     }
-    
+
     var maximumValue: Double {
-        return self.map { (dataPoint) -> Double in
-            return dataPoint.value
+        self.map { (dataPoint) -> Double in
+            dataPoint.value
         }.max() ?? 0.0
     }
-    
+
     var minimumValue: Double {
-        return self.map { (dataPoint) -> Double in
-            return dataPoint.value
+        self.map { (dataPoint) -> Double in
+            dataPoint.value
         }.min() ?? 0.0
     }
-    
+
     var sum: Double {
-        return self.reduce(0) { partialResult, dataPoint in
-            return partialResult + dataPoint.value
+        self.reduce(0) { partialResult, dataPoint in
+            partialResult + dataPoint.value
         }
     }
-    
+
     var average: Double {
         if count == 0 {
             return 0.0
         }
-        
+
         return sum / Double(count)
     }
-    
+
     var maximumDatapoint: Element? {
-        
         if let first = self.first {
             return self.reduce(first) { (result, nextDataPoint) -> Element in
                 if nextDataPoint.value > result.value {
@@ -175,19 +177,39 @@ public extension Array where Element == FredKitDataPoint {
 
         return nil
     }
-    
+
     var startDate: Date {
         self.min { dp1, dp2 in
-            return dp1.timeStamp < dp2.timeStamp
+            dp1.timeStamp < dp2.timeStamp
         }?.timeStamp ?? Date()
     }
-    
+
     var endDate: Date {
         self.max { dp1, dp2 in
-            return dp1.timeStamp < dp2.timeStamp
+            dp1.timeStamp < dp2.timeStamp
         }?.timeStamp ?? Date()
     }
-    
+
+    func accumulated(for accumulationType: AccumulationType) -> Double {
+        accumulationType.accumulate(dataPoints: self)
+    }
+
+    @available(iOS 10.0, macOS 10.12, watchOS 3.0, *)
+    func filteredDataPoints(for dateInterval: DateInterval) -> [Element] {
+        self.filter { element -> Bool in
+            element.timeStamp >= dateInterval.start && element.timeStamp <= dateInterval.end
+        }
+    }
+}
+
+public extension Array where Element: FredKitDataPoint {
+
+    var maximumValue: Double {
+        self.map { (dataPoint) -> Double in
+            dataPoint.value
+        }.max() ?? 0.0
+    }
+
     func interpolatedDatapoint(forTimeStamp timeStamp: Date) -> Element? {
         if self.isEmpty {
             return nil
@@ -198,7 +220,7 @@ public extension Array where Element == FredKitDataPoint {
         if timeStamp > self.last!.timeStamp {
             return self.last!
         }
-        
+
         return self.reduce(self.first!) { (result, dataPoint) -> Element in
             if abs(timeStamp.timeIntervalSince(result.timeStamp)) > abs(timeStamp.timeIntervalSince(dataPoint.timeStamp)) {
                 return dataPoint
@@ -206,11 +228,11 @@ public extension Array where Element == FredKitDataPoint {
             return result
         }
     }
-    
+
     func interpolatedValue(forTimeStamp timeStamp: Date) -> Double {
         return interpolatedDatapoint(forTimeStamp: timeStamp)?.value ?? 0
     }
-    
+
     mutating func replaceDataPoints(inRange startDate: Date, endDate: Date, withDataPoints dataPoints: [Element]) {
         let prefix = self.filter { (dataPoint) -> Bool in
             return dataPoint.timeStamp < startDate
@@ -222,19 +244,6 @@ public extension Array where Element == FredKitDataPoint {
         
         self = prefix + dataPoints + suffix
     }
-    
-    @available(iOS 10.0, macOS 10.12, watchOS 3.0, *)
-    func filteredDataPoints(for dateInterval: DateInterval) -> [Element] {
-        return self.filter({ (element) -> Bool in
-            return element.timeStamp >= dateInterval.start && element.timeStamp <= dateInterval.end
-        })
-    }
-    
-    
-    func accumulated(for accumulationType: AccumulationType) -> Double {
-        return accumulationType.accumulate(dataPoints: self)
-    }
-    
 }
 
 public struct OccuranceDataPoint: FredKitDataPoint {
@@ -248,8 +257,8 @@ public struct OccuranceDataPoint: FredKitDataPoint {
 }
 
 extension Array where Element == Double {
-    var average: Double {
-        
+
+    public var average: Double {
         if self.count == 0 {
             return 0.0
         }
@@ -262,12 +271,12 @@ extension Array where Element == Double {
 
 
 extension NSDictionary {
-    func verifyContentsForSaving() {
+    
+    public func verifyContentsForSaving() {
         NSDictionary.verifyContentsForSaving(contents: self)
     }
     
     private static func verifyContentsForSaving(contents: Any) {
-        
         if let dictionary = contents as? NSDictionary {
             dictionary.keyEnumerator().forEach { (key) in
                 
@@ -299,6 +308,7 @@ extension NSDictionary {
 }
 
 public extension Array where Element: FredKitJSONDataPoint {
+   
     var jsonArray: [ [String: Any] ] {
         return self.map { (dataPoint) -> [String: Any] in
             return dataPoint.json
@@ -306,7 +316,7 @@ public extension Array where Element: FredKitJSONDataPoint {
     }
 }
 
-public extension Array where Element == [ String: Any ] {
+public extension Array where Element == [String: Any] {
     
     func generateDataPointsArray<T: FredKitJSONDataPoint>() -> [T] {
         return self.compactMap { (json) -> T? in
