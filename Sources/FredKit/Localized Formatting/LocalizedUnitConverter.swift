@@ -118,7 +118,7 @@ extension Measurement where UnitType==UnitLength {
 
 
 @available(iOS 10.0, *)
-extension Double {
+public extension Double {
     var localizedUnitFromMeters: LocalizedValue {
         return LocalizedUnitConverter.sharedConverter.convertToLocalizedUnit(value: self, from: .meters)
     }

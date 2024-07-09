@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-struct StringUnitFormatter {
-    
+public struct StringUnitFormatter {
+
     private static func font(withSize size: Double, weight: UIFont.Weight) -> UIFont {
         return UIFont.systemFont(ofSize: CGFloat(size), weight: weight).rounded
     }
