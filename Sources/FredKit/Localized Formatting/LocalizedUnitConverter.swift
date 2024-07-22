@@ -7,6 +7,7 @@
 //
 
 import Foundation
+#if !os(macOS)
 import UIKit
 
 public struct LocalizedValue {
@@ -23,6 +24,7 @@ public struct LocalizedValue {
         return StringUnitFormatter.formattedString(fromString: value, fontSize: fontSize, unit: unit, fontWeight: weight)
     }
 }
+#endif
 
 
 public enum UnitSystem: String {
