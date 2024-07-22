@@ -24,7 +24,7 @@ public struct LocalizedValue {
         return StringUnitFormatter.formattedString(fromString: value, fontSize: fontSize, unit: unit, fontWeight: weight)
     }
 }
-#endif
+
 
 
 public enum UnitSystem: String {
@@ -125,3 +125,5 @@ public extension Double {
         return LocalizedUnitConverter.sharedConverter.convertToLocalizedUnit(value: self, from: .meters)
     }
 }
+
+#endif
