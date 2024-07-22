@@ -6,6 +6,7 @@
 //  Copyright © 2018 Frederik Riedel. All rights reserved.
 //
 
+#if !os(macOS)
 import Foundation
 import UIKit
 
@@ -37,3 +38,4 @@ public struct StringUnitFormatter {
         return formattedString(fromString: string, fontSize: fontSize, unit: unit, fontWeight: fontWeight, unitColor: nil)
     }
 }
+#endif
