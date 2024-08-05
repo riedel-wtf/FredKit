@@ -10,6 +10,7 @@ import Foundation
 #if canImport(QuartzCore)
 import QuartzCore
 
+#if !os(watchOS)
 public extension CALayer {
     func setContinousCorner(radius: CGFloat) {
         self.cornerRadius = radius
@@ -19,4 +20,5 @@ public extension CALayer {
         }
     }
 }
+#endif
 #endif
