@@ -68,7 +68,7 @@ public extension TimeInterval {
         }
         
         if numberOfHours <= 0 && numberOfMinutes <= 0 {
-            localizedComponents.append(LocalizedValue(value: "0", unit: FredKitLocalizedString(string: "mins", bundle: Bundle.module)))
+            localizedComponents.append(LocalizedValue(value: "\(timeIntervalInSeconds)", unit: FredKitLocalizedString(string: "sec", bundle: Bundle.module)))
         }
         
         return localizedComponents
