@@ -10,8 +10,8 @@ import Foundation
 #if !os(macOS)
 import UIKit
 
-public struct LocalizedValue {
-    
+public struct LocalizedValue: Equatable, Hashable, Codable {
+
     public init(value: String, unit: String) {
         self.value = value
         self.unit = unit
@@ -27,7 +27,7 @@ public struct LocalizedValue {
 
 
 
-public enum UnitSystem: String {
+public enum UnitSystem: String, Equatable, Hashable, Codable {
     case metric, imperial
 }
 
