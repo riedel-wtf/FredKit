@@ -38,8 +38,9 @@ public struct LocalizedUnitConverter {
     
     let metricUnits = [UnitLength.centimeters, UnitLength.meters, UnitLength.kilometers]
     let imperialUnits = [UnitLength.inches, UnitLength.feet, UnitLength.yards, UnitLength.miles]
-    
-    public func convertToLocalizedUnit(value: Double, from unit: UnitLength, numberOfFractionDigits: Int = 2) -> LocalizedValue {
+
+    /// When no specific `unitSystem` is specified, the device's preferred system is used
+    public func convertValue(_ value: Double, from unit: UnitLength, to preferredUnitSystem: UnitSystem? = nil, numberOfFractionDigits: Int = 2) -> LocalizedValue {
         let fmt = NumberFormatter()
         fmt.maximumFractionDigits = numberOfFractionDigits
         fmt.minimumFractionDigits = 0
@@ -48,28 +49,34 @@ public struct LocalizedUnitConverter {
         let measurementFormatter = MeasurementFormatter()
         measurementFormatter.numberFormatter = fmt
         measurementFormatter.unitOptions = .providedUnit
-        
-        let measurement = Measurement(value: value, unit: unit)
-        
+
+        var measurement = Measurement(value: value, unit: unit)
+        if let preferredUnitSystem {
+            measurement = measurement.naturalMeasurement(in: preferredUnitSystem)
+        }
+
         let formattedMeasurement = measurementFormatter.string(from: measurement)
         if (formattedMeasurement.split(separator: " ").count > 1) {
             let resultingValue = formattedMeasurement.split(separator: " ")[0]
             let resultingUnit = formattedMeasurement.split(separator: " ")[1]
-            
+
             return LocalizedValue(value: String(resultingValue), unit: String(resultingUnit))
         } else if (formattedMeasurement.split(separator: " ").count > 1) {
             let resultingValue = formattedMeasurement.split(separator: " ")[0]
             let resultingUnit = formattedMeasurement.split(separator: " ")[1]
-            
+
             return LocalizedValue(value: String(resultingValue), unit: String(resultingUnit))
         }
-        
+
         return LocalizedValue(value: formattedMeasurement, unit: "")
-        
+    }
+
+    public func convertToLocalizedUnit(value: Double, from unit: UnitLength, numberOfFractionDigits: Int = 2) -> LocalizedValue {
+        self.convertValue(value, from: unit, to: nil, numberOfFractionDigits: numberOfFractionDigits)
     }
     
     public static func convertToLocalizedNumber(number: Int, numberOfDigits: Int) -> String {
-        return convertToLocalizedNumber(number: Double(number), numberOfDigits: numberOfDigits)
+        convertToLocalizedNumber(number: Double(number), numberOfDigits: numberOfDigits)
     }
     
     public static func convertToLocalizedNumber(number: Double, numberOfDigits: Int) -> String {
@@ -113,7 +120,7 @@ extension Measurement where UnitType==UnitLength {
         return .meters
     }
     
-    public func natrualMeasurement(in unitSystem: UnitSystem) -> Measurement {
+    public func naturalMeasurement(in unitSystem: UnitSystem) -> Measurement {
         return converted(to: naturalScale(in: unitSystem))
     }
 }
