@@ -95,29 +95,32 @@ public struct LocalizedUnitConverter {
 @available(iOS 10.0, *)
 extension Measurement where UnitType==UnitLength {
     public func naturalScale(in unitSystem: UnitSystem) -> UnitLength {
-        if unitSystem == .imperial {
-            
-            let measurementInFeet = abs(converted(to: UnitLength.feet).value)
-            
-            if measurementInFeet < 1 {
-                return .inches
-            } else if measurementInFeet > 999 && measurementInFeet < 3000 {
-                return .yards
-            } else if measurementInFeet >= 3000 {
-                return .miles
+        switch unitSystem {
+        case .metric:
+            let measurementInMeters = abs(converted(to: .meters).value)
+            return if measurementInMeters <= 0.01 {
+                .meters
+            } else if measurementInMeters < 1.0 {
+                .centimeters
+            } else if measurementInMeters > 999.0 {
+                .kilometers
+            } else {
+                .meters
             }
-            
-            return .feet
+        case .imperial:
+            let measurementInFeet = abs(converted(to: .feet).value)
+            return if measurementInFeet <= 0.01 {
+                .feet
+            } else if measurementInFeet < 1.0 {
+                .inches
+            } else if measurementInFeet > 999.0 && measurementInFeet < 3000.0 {
+                .yards
+            } else if measurementInFeet >= 3000.0 {
+                .miles
+            } else {
+                .feet
+            }
         }
-        
-        let measurementInMeters = abs(converted(to: UnitLength.meters).value)
-
-        if measurementInMeters < 1 {
-            return .centimeters
-        } else if measurementInMeters > 999 {
-            return .kilometers
-        }
-        return .meters
     }
     
     public func naturalMeasurement(in unitSystem: UnitSystem) -> Measurement {
