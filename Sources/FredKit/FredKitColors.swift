@@ -104,28 +104,29 @@ extension UIColor {
     }
 }
 
-public struct LocalizedColor {
-    public static var checkMarkColor: UIColor {
-        if Locale.current.regionCode == "CN" {
-            return .systemRed
-        }
-        return .systemGreen
-    }
-    
-    public static var xmarkColor: UIColor {
-        if Locale.current.regionCode == "CN" {
-            return .systemGreen
-        }
-        return .systemRed
-    }
-    
-    public static var trustworthyColor: UIColor {
-        if Locale.current.regionCode == "CN" {
-            return UIColor(hex: "EA445A")
-        }
-        return .systemBlue
-    }
-}
-
 
 #endif
+
+import SwiftUI
+public struct LocalizedColor {
+    public static var checkMarkColor: Color {
+        if Locale.current.regionCode == "CN" {
+            return .red
+        }
+        return .green
+    }
+    
+    public static var xmarkColor: Color {
+        if Locale.current.regionCode == "CN" {
+            return .green
+        }
+        return .red
+    }
+    
+    public static var trustworthyColor: Color {
+        if Locale.current.regionCode == "CN" {
+            return .red
+        }
+        return .blue
+    }
+}
