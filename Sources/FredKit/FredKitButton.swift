@@ -70,7 +70,7 @@ public enum FredKitButtonStyle {
         var image: UIImage?
     }
     
-    private (set) var buttonStates: [ButtonState] = []
+    private(set) var buttonStates: [ButtonState] = []
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView()
         activityIndicator.hidesWhenStopped = true

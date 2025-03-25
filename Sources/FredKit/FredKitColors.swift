@@ -6,19 +6,18 @@
 //  Copyright © 2018 Frederik Riedel. All rights reserved.
 //
 
-#if os(iOS)
 import Foundation
-import UIKit
 import SwiftUI
 
+#if os(iOS)
+import UIKit
 public extension UIColor {
     var brightness: CGFloat {
         var red : CGFloat = 0
         var green : CGFloat = 0
         var blue : CGFloat = 0
         var alpha : CGFloat = 0
-        
-        
+
         if getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
             return (0.2126 * red + 0.7152 * green + 0.0722 * blue)
         }
@@ -27,18 +26,13 @@ public extension UIColor {
     }
     
     var isLightColor: Bool {
-        return brightness > 0.5
+        brightness > 0.5
     }
     
     var goodContrastColor: UIColor {
-        if isLightColor {
-            return .black
-        }
-        
-        return .white
+        isLightColor ? .black : .white
     }
-    
-    
+
     static func addColor(_ color1: UIColor, with color2: UIColor) -> UIColor {
         var (r1, g1, b1, a1) = (CGFloat(0), CGFloat(0), CGFloat(0), CGFloat(0))
         var (r2, g2, b2, a2) = (CGFloat(0), CGFloat(0), CGFloat(0), CGFloat(0))
@@ -63,11 +57,9 @@ public extension UIColor {
     static func *(color: UIColor, multiplier: Double) -> UIColor {
         return multiplyColor(color, by: CGFloat(multiplier))
     }
-
-    
 }
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, watchOS 6.0, *)
 extension Color {
     init(hex: String) {
         self.init(UIColor(hex: hex))
@@ -98,12 +90,11 @@ extension UIColor {
         self.init(white: 1.0, alpha: 1.0)
     }
     
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, watchOS 6.0, *)
     public var swiftUI: Color {
         Color(self)
     }
 }
-
 
 #endif
 
