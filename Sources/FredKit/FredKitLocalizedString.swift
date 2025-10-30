@@ -34,3 +34,11 @@ public func FredKitLocalizedString(string: String, bundle: Bundle, args: CVarArg
     
     return localizedFormattedString
 }
+
+public func FredKitLocalizedString(string: String, args: CVarArg...) -> String {
+    let localizedString = NSLocalizedString(string, bundle: .module, comment: "")
+    
+    let localizedFormattedString = String(format: localizedString, arguments: args)
+    
+    return localizedFormattedString
+}
