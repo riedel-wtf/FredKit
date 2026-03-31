@@ -9,8 +9,9 @@
 import Foundation
 import SwiftUI
 
-#if os(iOS)
+#if os(iOS) || os(watchOS)
 import UIKit
+
 public extension UIColor {
     var brightness: CGFloat {
         var red : CGFloat = 0
