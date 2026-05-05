@@ -7,8 +7,8 @@
 //
 
 import Foundation
-#if !os(macOS)
-import UIKit
+import SwiftUI
+
 
 public struct LocalizedValue: Equatable, Hashable, Codable {
 
@@ -20,13 +20,14 @@ public struct LocalizedValue: Equatable, Hashable, Codable {
     public var value: String
     public var unit: String
     
-    public func attributedString(ofSize fontSize: Double, weight: UIFont.Weight) -> NSAttributedString {
+    public func attributedString(ofSize fontSize: Double, weight: Font.Weight) -> AttributedString {
         return StringUnitFormatter.formattedString(fromString: value, fontSize: fontSize, unit: unit, fontWeight: weight)
     }
 }
 
 
-
+#if !os(macOS)
+import UIKit
 public enum UnitSystem: String, Equatable, Hashable, Codable {
     case metric, imperial
 }

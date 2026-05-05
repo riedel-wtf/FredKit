@@ -6,36 +6,36 @@
 //  Copyright © 2018 Frederik Riedel. All rights reserved.
 //
 
-#if !os(macOS)
 import Foundation
-import UIKit
+import SwiftUI
 
 public struct StringUnitFormatter {
 
-    private static func font(withSize size: Double, weight: UIFont.Weight) -> UIFont {
-        return UIFont.systemFont(ofSize: CGFloat(size), weight: weight).rounded
+    private static func font(withSize size: Double, weight: Font.Weight) -> Font {
+        return .system(size: size, weight: weight, design: .rounded)
     }
-    
-    public static func formattedString(fromString string: String, fontSize: Double, unit: String, fontWeight: UIFont.Weight, unitColor: UIColor?) -> NSAttributedString {
-        let attributedString = NSMutableAttributedString()
-        
-        attributedString.append(NSAttributedString(string: string, attributes: [.font: font(withSize: fontSize, weight: fontWeight)] ))
-        
-        if let color = unitColor {
-            attributedString.append(NSAttributedString(string: unit.uppercased(), attributes: [.font: font(withSize: 0.8*fontSize, weight: fontWeight), .foregroundColor : color] ))
-        } else {
-            attributedString.append(NSAttributedString(string: unit.uppercased(), attributes: [.font: font(withSize: 0.8*fontSize, weight: fontWeight)] ))
+
+    public static func formattedString(fromString string: String, fontSize: Double, unit: String, fontWeight: Font.Weight, unitColor: Color?) -> AttributedString {
+        var attributedString = AttributedString(string)
+        attributedString.font = font(withSize: fontSize, weight: fontWeight)
+
+        var unitString = AttributedString(unit.uppercased())
+        unitString.font = font(withSize: 0.8 * fontSize, weight: fontWeight)
+
+        if let unitColor {
+            unitString.foregroundColor = unitColor
         }
-        
-        return NSAttributedString(attributedString: attributedString)
+
+        attributedString.append(unitString)
+
+        return attributedString
     }
-    
-    public static func formattedString(fromString string: String, fontSize: Double, unit: String) -> NSAttributedString {
+
+    public static func formattedString(fromString string: String, fontSize: Double, unit: String) -> AttributedString {
         return formattedString(fromString: string, fontSize: fontSize, unit: unit, fontWeight: .regular, unitColor: nil)
     }
-    
-    public static func formattedString(fromString string: String, fontSize: Double, unit: String, fontWeight: UIFont.Weight) -> NSAttributedString {
+
+    public static func formattedString(fromString string: String, fontSize: Double, unit: String, fontWeight: Font.Weight) -> AttributedString {
         return formattedString(fromString: string, fontSize: fontSize, unit: unit, fontWeight: fontWeight, unitColor: nil)
     }
 }
-#endif

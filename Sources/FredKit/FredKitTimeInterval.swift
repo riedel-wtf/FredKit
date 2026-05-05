@@ -49,6 +49,7 @@ public extension TimeInterval {
             return LocalizedValue(value: "\(fullAmountOfTimeIntervalOption)", unit: representedTimeInterval.localizedUnitForTimeInterval)
         }
     }
+#endif
     
     var localizedComponents: [LocalizedValue] {
         
@@ -73,7 +74,6 @@ public extension TimeInterval {
         
         return localizedComponents
     }
-#endif
     
     var humanReadableTimeIntervalMaximumDays: String {
         if self < TimeInterval.hour {
