@@ -32,7 +32,7 @@ public extension UIColor {
     
     var goodContrastColor: UIColor {
         UIColor { traitCollection in
-            return resolvedColor(with: traitCollection).isLightColor ? .black : .white
+            return self.resolvedColor(with: traitCollection).isLightColor ? .black : .white
         }
     }
 
