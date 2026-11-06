@@ -31,7 +31,9 @@ public extension UIColor {
     }
     
     var goodContrastColor: UIColor {
-        isLightColor ? .black : .white
+        UIColor { traitCollection in
+            return resolvedColor(with: traitCollection).isLightColor ? .black : .white
+        }
     }
 
     static func addColor(_ color1: UIColor, with color2: UIColor) -> UIColor {
